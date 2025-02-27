@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import FormInputStyle from '../styel/formInputStyel';
 
-const ModalCustomer = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' }) => {
+const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' }) => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         phone: '',
         address: '',
+        email: '',
     });
 
     useEffect(() => {
@@ -18,6 +19,7 @@ const ModalCustomer = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                 lastName: '',
                 phone: '',
                 address: '',
+                email: ''
             });
         }
     }, [initialData, mode]);
@@ -39,7 +41,7 @@ const ModalCustomer = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg p-6 w-[50%]">
                 <h2 className="text-xl font-bold mb-4">
-                    {mode === 'create' ? 'Create Customer' : 'Update Customer'}
+                    {mode === 'create' ? 'Create User' : 'Update User'}
                 </h2>
                 <form onSubmit={handleSubmit}
                     className="flex flex-col gap-2"
@@ -83,6 +85,14 @@ const ModalCustomer = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                         />
 
                     </div>
+                    <input
+                        type="text"
+                        placeholder='email'
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className={FormInputStyle}
+                    />
 
                     <div className="flex justify-end gap-2">
                         <button
@@ -105,4 +115,4 @@ const ModalCustomer = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
     );
 };
 
-export default ModalCustomer;
+export default ModalEmployee;

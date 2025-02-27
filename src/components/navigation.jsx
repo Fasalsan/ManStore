@@ -1,35 +1,57 @@
+import { FaTshirt, FaPalette, FaRuler, FaBox, FaUserTie, FaUsers, FaShoppingCart, FaFlask } from "react-icons/fa";
+
+
 export const sidebar = [
   {
     id: 1,
-    label: "Categories",
+    icon: <FaTshirt />,
+    label: "Brand",
     path: "/dashboard",
   },
   {
     id: 2,
+    icon: <FaPalette />,
+    label: "Color",
+    path: "/dashboard/color",
+  },
+  {
+    id: 3,
+    icon: <FaRuler />,
+    label: "Size",
+    path: "/dashboard/size",
+  },
+  {
+    id: 4,
+    icon: <FaBox />,
     label: "Products",
     path: "/dashboard/product",
   },
   {
-    id: 3,
-    label: "User",
-    path: "/dashboard/user",
+    id: 5,
+    icon: <FaUserTie />,
+    label: "Employee",
+    path: "/dashboard/employee",
   },
   {
-    id: 4,
+    id: 6,
+    icon: <FaUsers />,
     label: "Customer",
     path: "/dashboard/customer",
   },
   {
-    id: 5,
+    id: 7,
+    icon: <FaShoppingCart />,
     label: "SalesOrder",
     path: "/dashboard/salesorder",
   },
   {
-    id: 6,
-    label: "Brand",
-    path: "/dashboard/brand",
+    id: 8,
+    icon: <FaFlask />,
+    label: "Testing",
+    path: "/dashboard/testing",
   },
 ];
+
 
 // -----------------------------------------Category-------------------------
 

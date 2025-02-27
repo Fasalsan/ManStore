@@ -3,10 +3,10 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { RiEditFill } from "react-icons/ri";
 import request from '../util/helper';
 import Loading from "../components/shared/Loading";
-import ModalCategory from '../components/modal/ModalCategory';
 import Propconfirm from "../components/Propconfirm";
+import ModalSize from '../components/modal/ModalSize';
 
-export default function Categories() {
+export default function Size() {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
@@ -41,14 +41,14 @@ export default function Categories() {
     }, []);
 
     const getCategory = async () => {
-        const response = await request("Category/GetAll", "get")
+        const response = await request("Size/GetAll", "get")
         setCategory(response)
     }
 
     // CreateNewCategory
     const CreateCategory = async (data) => {
         try {
-            await request(`Category/Post`, "post", data)
+            await request(`Size/Post`, "post", data)
 
             await getCategory();
 
@@ -60,7 +60,7 @@ export default function Categories() {
     const UpdateCategory = async (data) => {
         const id = isId
         try {
-            await request(`Category/Update?id=${id}`, "Put", data)
+            await request(`Size/Update?id=${id}`, "Put", data)
             await getCategory();
 
         } catch (error) {
@@ -72,7 +72,7 @@ export default function Categories() {
     const DeleteCategory = async () => {
         const id = isId
         try {
-            await request(`Category/Delete?id=${id}`, "delete",)
+            await request(`Size/Delete?id=${id}`, "delete",)
             await getCategory();
 
             setLoading(false);
@@ -137,42 +137,35 @@ export default function Categories() {
                     placeholder='Search'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='border border-[#999999] w-[25%] px-4 py-2 focus:outline-none rounded-lg'
+                    className='w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg'
                 />
 
                 <button
                     // onClick={() => setModalCreate(true)}
                     onClick={handleCreate}
-                    className='bg-[#163c82] px-12 py-2 rounded-lg text-white'
+                    className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
                 >Add+</button>
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
-                    <thead className="text-xs text-white uppercase bg-black dark:bg-gray-700 dark:text-gray-400 ">
+                    <thead class="bg-gray-700 text-white">
                         <tr>
-                            <th scope="col" className="px-6 py-5">
-                                ID
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                CategoryName
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Action
-                            </th>
-
+                            <th class="px-6 py-4 text-center">ID</th>
+                            <th class="px-6 py-4 text-center">Name</th>
+                            <th class="px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredData.length > 0 ? (
-                            filteredData.map((item,i) => (
+                            filteredData.map((item, i) => (
                                 <tr key={item.id}
-                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100"
+                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 text-center"
                                 >
-                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i+1}</td>
-                                    <td>{item.name}</td>
-                                    <td className="px-6 py-4">
-                                        <div className='flex gap-4'>
+                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1}</td>
+                                    <td className='text-center'>{item.name}</td>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className='flex gap-4 justify-center'>
                                             <RiDeleteBin5Fill
                                                 onClick={() => handlOpenPropconfirm(item.id)}
                                                 className='text-red-600 text-[20px] cursor-pointer'
@@ -254,7 +247,7 @@ export default function Categories() {
                 </div>
             </Propconfirm>
             {/* Modal */}
-            <ModalCategory
+            <ModalSize
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}

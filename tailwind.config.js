@@ -3,9 +3,9 @@ module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     extend: {
-      backgroundImage: {
-        'hero': "url('https://t4.ftcdn.net/jpg/09/84/85/09/360_F_984850903_iEgUVkajVfXn6RCmvvd4rE2lx7vo3KhF.jpg')",
-      },
+      // backgroundImage: {
+      //   'hero': "url('https://img.freepik.com/premium-vector/fashion-boutique-people-choosing-goods-clothing-store-woman-choosing-dress-consulting-with-seller_102902-7219.jpg')",
+      // },
  
     },
   },

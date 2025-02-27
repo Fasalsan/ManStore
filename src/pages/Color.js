@@ -4,9 +4,10 @@ import { RiEditFill } from "react-icons/ri";
 import request from '../util/helper';
 import Loading from "../components/shared/Loading";
 import Propconfirm from "../components/Propconfirm";
-import ModalProduct from '../components/modal/ModalProduct';
+import FormInputStyle from '../components/styel/formInputStyel';
+import ModalColor from '../components/modal/ModalColor';
 
-export default function Product() {
+export default function Color() {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ export default function Product() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [product, setProduct] = useState([]);
+    const [category, setCategory] = useState([]);
     const itemsPerPage = 5
     const handleCreate = () => {
         setIsEditMode(false);
@@ -37,43 +38,43 @@ export default function Product() {
     }
 
     useEffect(() => {
-        getProduct();
+        getCategory();
     }, []);
 
-    const getProduct = async () => {
-        const response = await request("Product/GetAll", "get")
-        setProduct(response)
+    const getCategory = async () => {
+        const response = await request("Color/GetAll", "get")
+        setCategory(response)
     }
 
-    // CreateNewProduct
-    const CreateProduct = async (data) => {
+    // CreateNewCategory
+    const CreateCategory = async (data) => {
         try {
-            await request(`Product/Post`, "post", data)
+            await request(`Color/Post`, "post", data)
 
-            await getProduct();
+            await getCategory();
 
         } catch (error) {
             console.error(error);
         }
     }
-    // UpadateProduct
-    const UpdateProduct = async (data) => {
+    // UpadateCategory
+    const UpdateCategory = async (data) => {
         const id = isId
         try {
-            await request(`Product/Update?id=${id}`, "Put", data)
-            await getProduct();
+            await request(`Color/Update?id=${id}`, "Put", data)
+            await getCategory();
 
         } catch (error) {
             console.error(error);
         }
     }
 
-    // RemoveProduct
-    const DeleteProduct = async () => {
+    // RemoveCategory
+    const DeleteCategory = async () => {
         const id = isId
         try {
-            await request(`Product/Delete?id=${id}`, "delete",)
-            await getProduct();
+            await request(`Color/Delete?id=${id}`, "delete",)
+            await getCategory();
 
             setLoading(false);
         } catch (err) {
@@ -81,12 +82,12 @@ export default function Product() {
         }
     }
 
-    // onConfirmRemoveProduct
-    const RemoveProduct = async () => {
+    // onConfirmRemoveCategory
+    const RemoveCategory = async () => {
         setLoading(true);
         setPropconfirm(false);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        DeleteProduct();
+        DeleteCategory();
     }
 
     // FormSubmit
@@ -95,14 +96,14 @@ export default function Product() {
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         if (isEditMode) {
-            await UpdateProduct(data);
-            await getProduct();
+            await UpdateCategory(data);
+            await getCategory();
             setLoading(false);
 
 
         } else {
-            await CreateProduct(data);
-            await getProduct();
+            await CreateCategory(data);
+            await getCategory();
             setLoading(false);
 
         }
@@ -110,10 +111,10 @@ export default function Product() {
 
 
     // Calculate total pages
-    const totalPages = Math.ceil(product.length / itemsPerPage);
+    const totalPages = Math.ceil(category.length / itemsPerPage);
 
     // Get the data for the current page
-    const currentData = product.slice(
+    const currentData = category.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -141,6 +142,7 @@ export default function Product() {
                 />
 
                 <button
+                    // onClick={() => setModalCreate(true)}
                     onClick={handleCreate}
                     className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
                 >Add+</button>
@@ -152,10 +154,6 @@ export default function Product() {
                         <tr>
                             <th class="px-6 py-4 text-center">ID</th>
                             <th class="px-6 py-4 text-center">Name</th>
-                            <th class="px-6 py-4 text-center">Price</th>
-                            <th class="px-6 py-4 text-center">Brand</th>
-                            <th class="px-6 py-4 text-center">Color</th>
-                            <th class="px-6 py-4 text-center">Size</th>
                             <th class="px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
@@ -167,10 +165,6 @@ export default function Product() {
                                 >
                                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1}</td>
                                     <td className='text-center'>{item.name}</td>
-                                    <td className='text-center'>{item.price}$</td>
-                                    <td className='text-center'>{item.brandModel.name}</td>
-                                    <td className='text-center'>{item.colorModel.name}</td>
-                                    <td className='text-center'>{item.sizeModel.name}</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className='flex gap-4 justify-center'>
                                             <RiDeleteBin5Fill
@@ -244,7 +238,7 @@ export default function Product() {
 
                     <div className="flex justify-end gap-2">
                         <button
-                            onClick={RemoveProduct}
+                            onClick={RemoveCategory}
                             className="bg-blue-600 px-9 py-2
                             text-white rounded-lg">Yes</button>
                         <button
@@ -254,7 +248,7 @@ export default function Product() {
                 </div>
             </Propconfirm>
             {/* Modal */}
-            <ModalProduct
+            <ModalColor
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}

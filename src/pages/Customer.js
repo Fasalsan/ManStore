@@ -5,7 +5,6 @@ import request from '../util/helper';
 import Loading from "../components/shared/Loading";
 import Propconfirm from "../components/Propconfirm";
 import ModalCustomer from '../components/modal/ModalCustomer';
-
 export default function Customer() {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -15,12 +14,8 @@ export default function Customer() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [customer, setCustomer] = useState([]);
-    const itemsPerPage = 7;
-    useEffect(() => {
-        getProduct();
-    }, []);
-
+    const [customr, setCustomer] = useState([]);
+    const itemsPerPage = 5
     const handleCreate = () => {
         setIsEditMode(false);
         setSelectedData(null);
@@ -40,51 +35,57 @@ export default function Customer() {
         setPropconfirm(true)
     }
 
+    useEffect(() => {
+        getCustomer();
+    }, []);
 
-    const getProduct = async () => {
+    const getCustomer = async () => {
         const response = await request("Customer/GetAll", "get")
         setCustomer(response)
-        console.log(response)
     }
 
-    // CreateNewProduct
-    const CreateProduct = async (data) => {
+    // CreateNewCategory
+    const CreateCustomer = async (data) => {
         try {
             await request(`Customer/Post`, "post", data)
-            await getProduct();
+
+            await getCustomer();
+
         } catch (error) {
             console.error(error);
         }
     }
-    // UpadateProduct
-    const UpdateProduct = async (data) => {
+    // UpadateCategory
+    const UpdateCategory = async (data) => {
         const id = isId
         try {
             await request(`Customer/Update?id=${id}`, "Put", data)
-            await getProduct();
+            await getCustomer();
+
         } catch (error) {
             console.error(error);
         }
     }
 
-    // RemoveProduct
-    const DeleteProduct = async () => {
+    // RemoveCategory
+    const DeleteCategory = async () => {
         const id = isId
         try {
             await request(`Customer/Delete?id=${id}`, "delete",)
-            await getProduct();
+            await getCustomer();
+
             setLoading(false);
         } catch (err) {
 
         }
     }
 
-    // onConfirmRemoveProduct
-    const RemoveProduct = async () => {
+    // onConfirmRemoveCategory
+    const RemoveCategory = async () => {
         setLoading(true);
         setPropconfirm(false);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        DeleteProduct();
+        DeleteCategory();
     }
 
     // FormSubmit
@@ -93,23 +94,25 @@ export default function Customer() {
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         if (isEditMode) {
-            UpdateProduct(data);
-            await getProduct();
+            await UpdateCategory(data);
+            await getCustomer();
             setLoading(false);
 
+
         } else {
-            await CreateProduct(data);
-            await getProduct();
+            await CreateCustomer(data);
+            await getCustomer();
             setLoading(false);
+
         }
     }
 
 
     // Calculate total pages
-    const totalPages = Math.ceil(customer.length / itemsPerPage);
+    const totalPages = Math.ceil(customr.length / itemsPerPage);
 
     // Get the data for the current page
-    const currentData = customer.slice(
+    const currentData = customr.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -119,9 +122,8 @@ export default function Customer() {
         setCurrentPage(pageNumber);
     };
 
-    // Filter the data based on the search term
     const filteredData = currentData.filter(item =>
-        item.name?.toLowerCase().includes(search.toLowerCase()) // Use optional chaining (?.) to check if 'name' exists
+        item.firstName?.toLowerCase().includes(search.toLowerCase()) 
     );
     return (
         <div>
@@ -130,52 +132,42 @@ export default function Customer() {
 
                 {loading && (<Loading />)}
                 <input type="text"
-                    placeholder='Search By Name'
+                    placeholder='Search'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='border border-[#f5a65d] w-[25%] px-4 py-2 focus:outline-none rounded-lg'
+                    className='w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg'
                 />
 
                 <button
                     // onClick={() => setModalCreate(true)}
                     onClick={handleCreate}
-                    className='bg-[#f5a65d] px-12 py-2 rounded-lg text-white'
+                    className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
                 >Add+</button>
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
-                    <thead className="text-xs text-white uppercase bg-black dark:bg-gray-700 dark:text-gray-400 ">
+                    <thead class="bg-gray-700 text-white">
                         <tr>
-                            <th scope="col" className="px-6 py-5">
-                                ID
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Phone
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Address
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Action
-                            </th>
+                            <th class="px-6 py-4 text-center">ID</th>
+                            <th class="px-6 py-4 text-center">Name</th>
+                            <th class="px-6 py-4 text-center">Phone</th>
+                            <th class="px-6 py-4 text-center">Address</th>
+                            <th class="px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredData.length > 0 ? (
                             filteredData.map((item, i) => (
                                 <tr key={item.id}
-                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100"
+                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 text-center"
                                 >
                                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1}</td>
-                                    <td>{item.name}</td>
+                                    <td>{item.firstName + " " + item.lastName}</td>
                                     <td>{item.phone}</td>
                                     <td>{item.address}</td>
-                                    <td className="px-6 py-4">
-                                        <div className='flex gap-4'>
+                                    <td className="px-6 py-4 text-center">
+                                        <div className='flex gap-4 justify-center'>
                                             <RiDeleteBin5Fill
                                                 onClick={() => handlOpenPropconfirm(item.id)}
                                                 className='text-red-600 text-[20px] cursor-pointer'
@@ -184,6 +176,7 @@ export default function Customer() {
                                                 onClick={() => handleEdits(item)}
                                                 className='text-green-600 text-[20px] cursor-pointer'
                                             />
+
                                         </div>
                                     </td>
                                 </tr>
@@ -225,6 +218,7 @@ export default function Customer() {
                         </button>
                     )
                 )}
+
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
@@ -236,6 +230,8 @@ export default function Customer() {
                     Next
                 </button>
             </div>
+
+
             {/* Propconfirm */}
             <Propconfirm isOpenProp={propconfirm}>
                 <div className="flex flex-col gap-7">
@@ -243,7 +239,7 @@ export default function Customer() {
 
                     <div className="flex justify-end gap-2">
                         <button
-                            onClick={RemoveProduct}
+                            onClick={RemoveCategory}
                             className="bg-blue-600 px-9 py-2
                             text-white rounded-lg">Yes</button>
                         <button

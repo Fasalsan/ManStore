@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalUser from '../components/modal/ModalUser';
+import ModalUser from '../components/modal/ModalEmployee';
 
 
 function Order() {

@@ -4,9 +4,8 @@ import { RiEditFill } from "react-icons/ri";
 import request from '../util/helper';
 import Loading from "../components/shared/Loading";
 import Propconfirm from "../components/Propconfirm";
-import ModalProduct from '../components/modal/ModalProduct';
-
-export default function Product() {
+import ModalEmployee from '../components/modal/ModalEmployee';
+export default function Employee() {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
@@ -15,7 +14,7 @@ export default function Product() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [product, setProduct] = useState([]);
+    const [emp, setEmp] = useState([]);
     const itemsPerPage = 5
     const handleCreate = () => {
         setIsEditMode(false);
@@ -37,43 +36,43 @@ export default function Product() {
     }
 
     useEffect(() => {
-        getProduct();
+        getBrand();
     }, []);
 
-    const getProduct = async () => {
-        const response = await request("Product/GetAll", "get")
-        setProduct(response)
+    const getBrand = async () => {
+        const response = await request("Employee/GetAll", "get")
+        setEmp(response)
     }
 
-    // CreateNewProduct
-    const CreateProduct = async (data) => {
+    // CreateNewCategory
+    const CreateBrand = async (data) => {
         try {
-            await request(`Product/Post`, "post", data)
+            await request(`Employee/Post`, "post", data)
 
-            await getProduct();
+            await getBrand();
 
         } catch (error) {
             console.error(error);
         }
     }
-    // UpadateProduct
-    const UpdateProduct = async (data) => {
+    // UpadateCategory
+    const UpdateCategory = async (data) => {
         const id = isId
         try {
-            await request(`Product/Update?id=${id}`, "Put", data)
-            await getProduct();
+            await request(`Employee/Update?id=${id}`, "Put", data)
+            await getBrand();
 
         } catch (error) {
             console.error(error);
         }
     }
 
-    // RemoveProduct
-    const DeleteProduct = async () => {
+    // RemoveCategory
+    const DeleteCategory = async () => {
         const id = isId
         try {
-            await request(`Product/Delete?id=${id}`, "delete",)
-            await getProduct();
+            await request(`Brand/Delete?id=${id}`, "delete",)
+            await getBrand();
 
             setLoading(false);
         } catch (err) {
@@ -81,12 +80,12 @@ export default function Product() {
         }
     }
 
-    // onConfirmRemoveProduct
-    const RemoveProduct = async () => {
+    // onConfirmRemoveCategory
+    const RemoveCategory = async () => {
         setLoading(true);
         setPropconfirm(false);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        DeleteProduct();
+        DeleteCategory();
     }
 
     // FormSubmit
@@ -95,14 +94,14 @@ export default function Product() {
         setLoading(true);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         if (isEditMode) {
-            await UpdateProduct(data);
-            await getProduct();
+            await UpdateCategory(data);
+            await getBrand();
             setLoading(false);
 
 
         } else {
-            await CreateProduct(data);
-            await getProduct();
+            await CreateBrand(data);
+            await getBrand();
             setLoading(false);
 
         }
@@ -110,10 +109,10 @@ export default function Product() {
 
 
     // Calculate total pages
-    const totalPages = Math.ceil(product.length / itemsPerPage);
+    const totalPages = Math.ceil(emp.length / itemsPerPage);
 
     // Get the data for the current page
-    const currentData = product.slice(
+    const currentData = emp.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -125,7 +124,7 @@ export default function Product() {
 
     // Filter the data based on the search term
     const filteredData = currentData.filter(item =>
-        item.name?.toLowerCase().includes(search.toLowerCase()) // Use optional chaining (?.) to check if 'name' exists
+        item.firstName?.toLowerCase().includes(search.toLowerCase()) // Use optional chaining (?.) to check if 'name' exists
     );
     return (
         <div>
@@ -141,6 +140,7 @@ export default function Product() {
                 />
 
                 <button
+                    // onClick={() => setModalCreate(true)}
                     onClick={handleCreate}
                     className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
                 >Add+</button>
@@ -152,10 +152,9 @@ export default function Product() {
                         <tr>
                             <th class="px-6 py-4 text-center">ID</th>
                             <th class="px-6 py-4 text-center">Name</th>
-                            <th class="px-6 py-4 text-center">Price</th>
-                            <th class="px-6 py-4 text-center">Brand</th>
-                            <th class="px-6 py-4 text-center">Color</th>
-                            <th class="px-6 py-4 text-center">Size</th>
+                            <th class="px-6 py-4 text-center">Phone</th>
+                            <th class="px-6 py-4 text-center">Address</th>
+                            <th class="px-6 py-4 text-center">Email</th>
                             <th class="px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
@@ -166,11 +165,11 @@ export default function Product() {
                                     className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 text-center"
                                 >
                                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1}</td>
-                                    <td className='text-center'>{item.name}</td>
-                                    <td className='text-center'>{item.price}$</td>
-                                    <td className='text-center'>{item.brandModel.name}</td>
-                                    <td className='text-center'>{item.colorModel.name}</td>
-                                    <td className='text-center'>{item.sizeModel.name}</td>
+                                    <td>{item.firstName + " " + item.lastName}</td>
+                                    <td>{item.phone}</td>
+                                    <td>{item.address}</td>
+                                    <td>{item.email}</td>
+
                                     <td className="px-6 py-4 text-center">
                                         <div className='flex gap-4 justify-center'>
                                             <RiDeleteBin5Fill
@@ -244,7 +243,7 @@ export default function Product() {
 
                     <div className="flex justify-end gap-2">
                         <button
-                            onClick={RemoveProduct}
+                            onClick={RemoveCategory}
                             className="bg-blue-600 px-9 py-2
                             text-white rounded-lg">Yes</button>
                         <button
@@ -254,7 +253,7 @@ export default function Product() {
                 </div>
             </Propconfirm>
             {/* Modal */}
-            <ModalProduct
+            <ModalEmployee
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}

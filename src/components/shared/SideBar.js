@@ -6,13 +6,12 @@ export default function SideBar() {
     return (
         <div className='bg-[#163c82] w-[15%] h-screen text-white'>
             <div className='pb-7 text-2xl font-bold p-5 '>
-                {/* <a href="/dashboard"> <h1>QV_STORE</h1></a> */}
                 <Link to={"/dashboard"}>Man Store</Link>
             </div>
             <nav>
-
                 <ul className="flex flex-col text-[16px]">
                     {sidebar?.map((item, i) => (
+
                         <NavLink
                             key={i}
                             to={item.path}
@@ -22,7 +21,10 @@ export default function SideBar() {
                                 }`
                             }
                         >
-                            {item.label}
+                            <div className='flex items-center gap-4'>
+                                {item.icon}
+                                <label htmlFor="">{item.label}</label>
+                            </div>
                         </NavLink>
 
                     ))}

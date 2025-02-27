@@ -3,13 +3,11 @@ import React, { useState } from 'react';
 import request from "../util/helper";
 import { useNavigate } from 'react-router-dom';
 import Loading from "../components/shared/Loading";
+import FormInputStyle from '../components/styel/formInputStyel';
 
 function Register() {
 
     const [formData, setFormData] = useState({
-        name: '',
-        // phone: '',
-        // address: '',
         email: '',
         password: '',
     });
@@ -58,32 +56,9 @@ function Register() {
                 <form
                     className='flex flex-col gap-4 items-center blur-none z-0 relative'
                     onSubmit={handleSubmit}>
+                   
                     <input
-                        className='border border-[#f5a65d] w-full px-4 py-2 focus:outline-none rounded-lg'
-                        type="text"
-                        placeholder="Username"
-                        name='name'
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                    <input
-                        className='border border-[#f5a65d] w-full px-4 py-2 focus:outline-none rounded-lg'
-                        type="text"
-                        placeholder="phone"
-                        name='phone'
-                        value={formData.phone}
-                        onChange={handleChange}
-                    />
-                    <input
-                        className='border border-[#f5a65d] w-full px-4 py-2 focus:outline-none rounded-lg'
-                        type="text"
-                        placeholder="address"
-                        name='address'
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
-                    <input
-                        className='border border-[#f5a65d] w-full px-4 py-2 focus:outline-none rounded-lg'
+                        className={FormInputStyle}
                         type="text"
                         placeholder="email"
                         name='email'
@@ -91,7 +66,7 @@ function Register() {
                         onChange={handleChange}
                     />
                     <input
-                        className='border border-[#f5a65d] w-full px-4 py-2 focus:outline-none rounded-lg'
+                        className={FormInputStyle}
                         type="text"
                         placeholder="password"
                         name='password'
