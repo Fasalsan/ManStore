@@ -1,193 +1,164 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { RiEditFill } from "react-icons/ri";
-import request from '../util/helper';
-import Loading from "../components/shared/Loading";
+import request from "../util/helper";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Propconfirm from "../components/Propconfirm";
-import ModalSize from '../components/modal/ModalSize';
+import ModalSize from "../components/modal/ModalSize"
 
 export default function Size() {
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
-    const [loading, setLoading] = useState(false);
     const [propconfirm, setPropconfirm] = useState(false);
     const [isId, setIsId] = useState();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [category, setCategory] = useState([]);
-    const itemsPerPage = 5
-    const handleCreate = () => {
-        setIsEditMode(false);
-        setSelectedData(null);
-        setIsModalOpen(true);
-    };
-
-    const handleEdits = (item) => {
-        setIsEditMode(true);
-        setSelectedData(item);
-        setIsModalOpen(true);
-        setIsId(item.id)
-    };
-
-    // handlOpenPropconfirm
-    const handlOpenPropconfirm = (id) => {
-        setIsId(id)
-        setPropconfirm(true)
-    }
+    const [size, setSize] = useState([]);
+    const itemsPerPage = 3;
 
     useEffect(() => {
-        getCategory();
+        getSize();
     }, []);
 
-    const getCategory = async () => {
-        const response = await request("Size/GetAll", "get")
-        setCategory(response)
-    }
+    const getSize = async () => {
+        const response = await request("Size/GetAll", "get");
+        setSize(response);
+    };
 
-    // CreateNewCategory
-    const CreateCategory = async (data) => {
+    const CreateSize = async (data) => {
         try {
-            await request(`Size/Post`, "post", data)
-
-            await getCategory();
-
+            await request(`Size/Post`, "post", data);
+            toast.success("Size created successfully!");
+            await getSize();
         } catch (error) {
             console.error(error);
         }
-    }
-    // UpadateCategory
-    const UpdateCategory = async (data) => {
-        const id = isId
-        try {
-            await request(`Size/Update?id=${id}`, "Put", data)
-            await getCategory();
+    };
 
+    const UpdateSize = async (data) => {
+        const id = isId;
+        try {
+            await request(`Size/Update?id=${id}`, "Put", data);
+            toast.success("Size updated successfully!");
+            await getSize();
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
-    // RemoveCategory
-    const DeleteCategory = async () => {
-        const id = isId
+    const DeleteSize = async () => {
+        const id = isId;
         try {
-            await request(`Size/Delete?id=${id}`, "delete",)
-            await getCategory();
-
-            setLoading(false);
+            await request(`Size/Delete?id=${id}`, "delete");
+            toast.error("Size deleted successfully!");
+            await getSize();
         } catch (err) {
-
+            console.error(err);
         }
-    }
+    };
 
-    // onConfirmRemoveCategory
-    const RemoveCategory = async () => {
-        setLoading(true);
+    const RemoveSize = async () => {
         setPropconfirm(false);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        DeleteCategory();
-    }
+        await DeleteSize();
+    };
 
-    // FormSubmit
     const handleSubmit = async (data) => {
-        setIsModalOpen(false)
-        setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setIsModalOpen(false);
         if (isEditMode) {
-            await UpdateCategory(data);
-            await getCategory();
-            setLoading(false);
-
-
+            await UpdateSize(data);
         } else {
-            await CreateCategory(data);
-            await getCategory();
-            setLoading(false);
-
+            await CreateSize(data);
         }
-    }
+    };
 
-
-    // Calculate total pages
-    const totalPages = Math.ceil(category.length / itemsPerPage);
-
-    // Get the data for the current page
-    const currentData = category.slice(
+    const totalPages = Math.ceil(size.length / itemsPerPage);
+    const currentData = size.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
 
-    // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    // Filter the data based on the search term
-    const filteredData = currentData.filter(item =>
-        item.name?.toLowerCase().includes(search.toLowerCase()) // Use optional chaining (?.) to check if 'name' exists
+    const filteredData = currentData.filter((item) =>
+        item.name?.toLowerCase().includes(search.toLowerCase())
     );
+
+    console.log("dataFilter :" , filteredData)
+
+
     return (
         <div>
-
-            <div className='flex justify-between items-center bg-white px-4 py-4 mb-4 shadow-md'>
-
-                {loading && (<Loading />)}
-                <input type="text"
-                    placeholder='Search'
+            <ToastContainer position="top-right" autoClose={3000} />
+            <div className="flex justify-between items-center bg-white px-4 py-4 mb-4 shadow-md">
+                <input
+                    type="text"
+                    placeholder="Search"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg'
+                    className="w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
                 />
-
                 <button
-                    // onClick={() => setModalCreate(true)}
-                    onClick={handleCreate}
-                    className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
-                >Add+</button>
+                    onClick={() => {
+                        setIsEditMode(false);
+                        setSelectedData(null);
+                        setIsModalOpen(true);
+                    }}
+                    className="bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg"
+                >
+                    Add+
+                </button>
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
-                    <thead class="bg-gray-700 text-white">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead className="bg-gray-700 text-white">
                         <tr>
-                            <th class="px-6 py-4 text-center">ID</th>
-                            <th class="px-6 py-4 text-center">Name</th>
-                            <th class="px-6 py-4 text-center">Action</th>
+                            <th className="px-6 py-4 text-center">ID</th>
+                            <th className="px-6 py-4 text-center">Name</th>
+                            <th className="px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredData.length > 0 ? (
                             filteredData.map((item, i) => (
-                                <tr key={item.id}
-                                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 text-center"
-                                >
-                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1}</td>
-                                    <td className='text-center'>{item.name}</td>
+                                <tr key={item.id} className="odd:bg-white even:bg-gray-50 border-b hover:bg-gray-100 text-center">
+                                    <td className="px-6 py-4 font-medium text-gray-900">{i + 1}</td>
+                                    <td className="text-center">{item.name}</td>
                                     <td className="px-6 py-4 text-center">
-                                        <div className='flex gap-4 justify-center'>
+                                        <div className="flex gap-4 justify-center">
                                             <RiDeleteBin5Fill
-                                                onClick={() => handlOpenPropconfirm(item.id)}
-                                                className='text-red-600 text-[20px] cursor-pointer'
+                                                onClick={() => {
+                                                    setIsId(item.id);
+                                                    setPropconfirm(true);
+                                                }}
+                                                className="text-red-600 text-[20px] cursor-pointer"
                                             />
                                             <RiEditFill
-                                                onClick={() => handleEdits(item)}
-                                                className='text-green-600 text-[20px] cursor-pointer'
+                                                onClick={() => {
+                                                    setIsEditMode(true);
+                                                    setSelectedData(item);
+                                                    setIsModalOpen(true);
+                                                    setIsId(item.id);
+                                                }}
+                                                className="text-green-600 text-[20px] cursor-pointer"
                                             />
-
                                         </div>
                                     </td>
                                 </tr>
                             ))
                         ) : (
-                            <div className='flex justify-center items-center w-full p-12'>
-                                <h1 className='text-red-600 text-3xl'> No data found</h1>
-                            </div>
+                            <tr>
+                                <td colSpan="3" className="text-center py-4 text-red-600 text-3xl">No data found</td>
+                            </tr>
                         )}
-
                     </tbody>
                 </table>
             </div>
+
             {/* Pagination Controls */}
             <div className="mt-4 flex justify-center">
                 <button
@@ -229,31 +200,22 @@ export default function Size() {
                 </button>
             </div>
 
-
-            {/* Propconfirm */}
             <Propconfirm isOpenProp={propconfirm}>
                 <div className="flex flex-col gap-7">
-                    <p>Are you Sure to delete this task!</p>
-
+                    <p>Are you sure you want to delete this size?</p>
                     <div className="flex justify-end gap-2">
-                        <button
-                            onClick={RemoveCategory}
-                            className="bg-blue-600 px-9 py-2
-                            text-white rounded-lg">Yes</button>
-                        <button
-                            onClick={() => setPropconfirm(false)}
-                            className="bg-red-600 px-9 py-2 text-white rounded-lg">No</button>
+                        <button onClick={RemoveSize} className="bg-blue-600 px-9 py-2 text-white rounded-lg">Yes</button>
+                        <button onClick={() => setPropconfirm(false)} className="bg-red-600 px-9 py-2 text-white rounded-lg">No</button>
                     </div>
                 </div>
             </Propconfirm>
-            {/* Modal */}
             <ModalSize
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}
                 initialData={selectedData}
-                mode={isEditMode ? 'update' : 'create'}
+                mode={isEditMode ? "update" : "create"}
             />
         </div>
-    )
+    );
 }

@@ -45,11 +45,11 @@ export const sidebar = [
     path: "/dashboard/salesorder",
   },
   {
-    id: 8,
-    icon: <FaFlask />,
+    id: 7,
+    icon: <FaShoppingCart />,
     label: "Testing",
     path: "/dashboard/testing",
-  },
+  }
 ];
 
 

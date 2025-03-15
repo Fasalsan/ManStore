@@ -19,7 +19,8 @@ const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                 lastName: '',
                 phone: '',
                 address: '',
-                email: ''
+                email: '',
+                password: ''
             });
         }
     }, [initialData, mode]);
@@ -41,7 +42,7 @@ const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg p-6 w-[50%]">
                 <h2 className="text-xl font-bold mb-4">
-                    {mode === 'create' ? 'Create User' : 'Update User'}
+                    {mode === 'create' ? 'Create Employee' : 'Update Employee'}
                 </h2>
                 <form onSubmit={handleSubmit}
                     className="flex flex-col gap-2"
@@ -83,16 +84,28 @@ const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                             onChange={handleChange}
                             className={FormInputStyle}
                         />
+                    </div>
+
+                    <div className='flex gap-4'>
+                        <input
+                            type="text"
+                            placeholder='email'
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className={FormInputStyle}
+                        />
+                        <input
+                            type="text"
+                            placeholder='password'
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className={FormInputStyle}
+                        />
+
 
                     </div>
-                    <input
-                        type="text"
-                        placeholder='email'
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={FormInputStyle}
-                    />
 
                     <div className="flex justify-end gap-2">
                         <button
