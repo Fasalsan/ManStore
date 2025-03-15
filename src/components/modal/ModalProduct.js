@@ -43,9 +43,11 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
         setFormData({
             name: '',
             price: '',
-            brand_Id: '',
-            color_Id: '',
-            size_Id: ''
+            quantity:'',
+            cost:'',
+            brandId: '',
+            colorId: '',
+            sizeId: ''
         });
     };
 
@@ -82,10 +84,28 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                             className={FormInputStyle}
                         />
                         <input
-                            type="text"
+                            type="number"
                             placeholder='price'
                             name="price"
                             value={formData.price}
+                            onChange={handleChange}
+                            className={FormInputStyle}
+                        />
+                    </div>
+                    <div className='flex gap-4'>
+                        <input
+                            type="number"
+                            placeholder='quantity'
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleChange}
+                            className={FormInputStyle}
+                        />
+                        <input
+                            type="number"
+                            placeholder='cost'
+                            name="cost"
+                            value={formData.cost}
                             onChange={handleChange}
                             className={FormInputStyle}
                         />
@@ -94,8 +114,8 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                     <div className='flex gap-4'>
 
                         <select
-                            name="brand_Id"
-                            value={formData.brand_Id}
+                            name="brandId"
+                            value={formData.brandId}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300 "
                         >
@@ -108,8 +128,8 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                         </select>
 
                         <select
-                            name="color_Id"
-                            value={formData.color_Id}
+                            name="colorId"
+                            value={formData.colorId}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300"
                         >
@@ -121,8 +141,8 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                             ))}
                         </select>
                         <select
-                            name="size_Id"
-                            value={formData.size_Id}
+                            name="sizeId"
+                            value={formData.sizeId}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300"
                         >

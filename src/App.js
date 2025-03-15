@@ -12,9 +12,10 @@ import NoPage from './pages/NoPage';
 import Register from './auth/Register';
 import Color from './pages/Color';
 import Employee from './pages/Employee';
-import Testing from './pages/Testing';
+import CreateSalesOrder from './pages/CreateSalesOrder';
 import Size from './pages/Size';
 import Brand from './pages/Brand'
+import Test from './pages/Test';
 
 function App() {
   return (
@@ -42,9 +43,9 @@ function App() {
             <Route path="employee" element={<Employee />} />
             <Route path="order" element={<Order />} />
             <Route path="salesorder" element={<SalesOrder />} />
-            <Route path="testing" element={<Testing />} />
+            <Route path="createSalesOrder" element={<CreateSalesOrder />} />
+            <Route path="testing" element={<Test />} />
           </Route>
-
           {/* Catch-All Route */}
           <Route path="*" element={<NoPage />} />
         </Routes>

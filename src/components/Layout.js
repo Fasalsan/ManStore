@@ -1,20 +1,14 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import SideBar from './shared/SideBar'
+import React, { useState, useRef, useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import SideBar from './shared/SideBar';
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import Breadcrumbs from './Breadcrumbs';
-import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useEffect } from "react";
 import Loading from '../components/shared/Loading';
 
-
-
 export default function Layout() {
-
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
-      const [loading, setLoading] = useState(false);
-    
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -29,12 +23,17 @@ export default function Layout() {
     }, []);
 
     const navigate = useNavigate();
+
     const logout = () => {
-        setLoading(true);
-        alert("Logged out!");
-        localStorage.removeItem("authToken");
-        navigate("/")
+        setLoading(true); 
+
+        setTimeout(() => {
+            localStorage.removeItem("authToken");
+            navigate("/"); 
+            setLoading(false);
+        }, 2000);
     };
+
     return (
         <>
             <div className='flex'>
@@ -73,22 +72,15 @@ export default function Layout() {
                                 </div>
                             )}
                         </div>
-
-
-
-                        {/* <div>
-                            <HiOutlineUserCircle
-                                className="text-5xl text-white cursor-pointer"
-                                onClick={() => logout()}
-                            />
-                        </div> */}
                     </div>
+
+                    {loading && <Loading />}
+
                     <div className='px-8 py-4'>
                         <Outlet />
                     </div>
                 </main>
             </div>
         </>
-
-    )
+    );
 }
