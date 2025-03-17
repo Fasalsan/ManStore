@@ -10,10 +10,6 @@ import mybg from '.././components/image/mybg.jpg'
 function Register() {
 
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        address: '',
         email: '',
         password: ''
     });
@@ -41,7 +37,7 @@ function Register() {
     // CreateNewUser
     const CreateUser = async () => {
         try {
-            await request(`Employee/Post`, "post", formData)
+            await request(`User/Post`, "post", formData)
 
         } catch (error) {
             console.error(error);
@@ -62,40 +58,57 @@ function Register() {
         <div style={style} className="h-screen flex">
             <div className="w-full flex flex-row-reverse justify-center items-center">
                 {loading && (<Loading />)}
-                <div className='bg-[#f6f6fd] w-[30%] px-6 py-9 rounded-2xl shadow-2xl'>
+                <div
+                    className="relative w-full min-h-screen flex items-center justify-center bg-cover bg-center"
+                    style={{ backgroundImage: 'url("https://png.pngtree.com/thumb_back/fh260/background/20210903/pngtree-clothing-store-casual-fashion-mens-photography-photos-with-pictures-image_796891.jpg")' }}
+                >
+                    <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm transition-all duration-500"></div>
 
-                    <div className='flex justify-center items-center pb-7'>
-                    <h1 className="text-2xl font-bold text-[#163c82]">Register</h1>
+                    <div className="relative z-10 w-full max-w-md bg-white/20 backdrop-blur-xl shadow-xl rounded-2xl p-8 border border-white/30">
+                        <h2 className="text-3xl font-bold text-white text-center mb-6">Register</h2>
+
+                        <form className="space-y-4" onSubmit={handleSubmit}>
+                            <div>
+                                <label htmlFor="email" className="block text-sm text-white mb-1">
+                                    Email
+                                </label>
+                                <input
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className={FormInputStyle}
+                                    placeholder="Enter your email"
+                                />
+                            </div>
+
+                            <div>
+                                <label  className="block text-sm text-white mb-1">
+                                    Password
+                                </label>
+                                <input
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className={FormInputStyle}
+                                    placeholder="Enter your password"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full mt-4 bg-white/80 text-black hover:bg-white font-semibold py-2 rounded-xl"
+                            >
+                                Register
+                            </button>
+                        </form>
+
+                        <p className="text-sm text-white text-center mt-4">
+                            Don't have an account?{' '}
+                            <a href="/register" className="text-white underline hover:text-blue-200">
+                                login here
+                            </a>
+                        </p>
                     </div>
-
-                    <form
-                        className='flex flex-col gap-4 items-center blur-none z-0 relative'
-                        onSubmit={handleSubmit}>
-                       
-                        <input
-                            className={FormInputStyle}
-                            type="text"
-                            placeholder="email"
-                            name='email'
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
-                        <input
-                            className={FormInputStyle}
-                            type="text"
-                            placeholder="password"
-                            name='password'
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                        <button
-                            className='bg-[#163c82] px-7 py-2 text-white rounded-lg'
-                            type="submit">Register</button>
-                    </form>
-
-                    {/* <div className='flex justify-end items-center'> <a href='/'>Sign In</a></div> */}
-                    <div className='flex gap-4 pt-2 justify-end items-center'>Have an account ? <a href='/' className='text-blue-600'> Sign In</a></div>
-
                 </div>
             </div>
         </div>
