@@ -20,90 +20,97 @@ function Login() {
     setLoading(true);
   
     try {
-      const response = await axios.post(`${Config.base_url}UserLogin`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${Config.base_url}UserLogin`,
+        { email, password },
+        { timeout: 20000 } // <-- Timeout added here
+      );
   
       const { token, user } = response.data;
   
-      // Save the token
       localStorage.setItem("authToken", token);
-  
       console.log("Logged in user:", user);
   
       setLoading(false);
-  
-      // Redirect to dashboard on success
       navigate("/dashboard");
     } catch (error) {
       setLoading(false);
   
-      // Show error message
-      if (error.response) {
+      if (error.code === 'ECONNABORTED') {
+        setError("Request timed out. Please try again.");
+      } else if (error.response) {
         setError(error.response.data.message || "Login failed");
       } else {
         setError("Network error. Please try again.");
       }
   
-      // Explicitly redirect back to login (optional, you're already there)
-      navigate("/");  // <- this line ensures you stay on login page
+      navigate("/");
     }
   };
   
 
-  
-
-  const style = {
-    backgroundImage: `url(${mybg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "",
-    width: "100%",
-  };
 
   return (
-    <div style={style} className="h-screen flex">
-    <div className="w-full flex flex-row-reverse justify-center items-center">
-      {loading ? (
-        <Loading /> 
-      ) : (
-        <div className="bg-[#f6f6fd] w-[30%] px-6 py-9 rounded-2xl shadow-2xl">
-          <div className="flex justify-center w-full items-center pb-7">
-            <h1 className="text-2xl font-bold text-[#163c82]">Login</h1>
-          </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          
-          <form className="flex flex-col gap-4 items-center" onSubmit={handleLogin}>
-            <input
-              className={FormInputStyle}
-              type="text"
-              placeholder="Username"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              className={FormInputStyle}
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              className="bg-[#163c82] px-7 py-2 text-white rounded-lg"
-              type="submit"
-            >
-              Login
-            </button>
-          </form>
+    <div className="h-screen flex">
+      <div className="w-full flex flex-row-reverse justify-center items-center">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div
+            className="relative w-full min-h-screen flex items-center justify-center bg-cover bg-center"
+            style={{ backgroundImage: 'url("https://png.pngtree.com/thumb_back/fh260/background/20210903/pngtree-clothing-store-casual-fashion-mens-photography-photos-with-pictures-image_796891.jpg")' }}
+          >
+            <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm transition-all duration-500"></div>
 
-          <div className="flex gap-4 pt-2 justify-end items-center">
-            No account? <a href="/register" className="text-blue-600">Sign Up</a>
+            <div className="relative z-10 w-full max-w-md bg-white/20 backdrop-blur-xl shadow-xl rounded-2xl p-8 border border-white/30">
+              <h2 className="text-3xl font-bold text-white text-center mb-6">Login</h2>
+
+              <form className="space-y-4" onSubmit={handleLogin}>
+                <div>
+                  <label htmlFor="email" className="block text-sm text-white mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="gmail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={FormInputStyle}
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="block text-sm text-white mb-1">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={FormInputStyle}
+                    placeholder="Enter your password"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full mt-4 bg-white/80 text-black hover:bg-white font-semibold py-2 rounded-xl"
+                >
+                  Sign In
+                </button>
+              </form>
+
+              <p className="text-sm text-white text-center mt-4">
+                Don't have an account?{' '}
+                <a href="/register" className="text-white underline hover:text-blue-200">
+                  Register here
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
-  </div>
   );
 }
 

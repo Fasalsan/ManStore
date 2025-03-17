@@ -16,6 +16,7 @@ import CreateSalesOrder from './pages/CreateSalesOrder';
 import Size from './pages/Size';
 import Brand from './pages/Brand'
 import Test from './pages/Test';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -35,7 +36,8 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Brand />} />
+            <Route index element={<Dashboard />} />
+            <Route path="brand" element={<Brand />} />
             <Route path="color" element={<Color />} />
             <Route path="size" element={<Size />} />
             <Route path="product" element={<Product />} />
