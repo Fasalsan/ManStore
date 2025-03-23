@@ -15,8 +15,8 @@ import Employee from './pages/Employee';
 import CreateSalesOrder from './pages/CreateSalesOrder';
 import Size from './pages/Size';
 import Brand from './pages/Brand'
-import Test from './pages/Test';
 import Dashboard from './pages/Dashboard';
+import Button from './components/Button';
 
 function App() {
   return (
@@ -46,7 +46,7 @@ function App() {
             <Route path="order" element={<Order />} />
             <Route path="salesorder" element={<SalesOrder />} />
             <Route path="createSalesOrder" element={<CreateSalesOrder />} />
-            <Route path="testing" element={<Test />} />
+            <Route path="testing" element={<Button />} />
           </Route>
           {/* Catch-All Route */}
           <Route path="*" element={<NoPage />} />

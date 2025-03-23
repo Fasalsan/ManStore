@@ -5,6 +5,7 @@ import request from "../util/helper";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
+import Button from "../components/Button";
 
 const SaleOrder = () => {
     const [openRow, setOpenRow] = useState(null);
@@ -21,11 +22,11 @@ const SaleOrder = () => {
         return data.map((order) => ({
             ...order,
             orderDate: new Date(order.orderDate).toLocaleDateString(),
-            totalAmount: `$${order.totalAmount?.toFixed(2) || "0.00"}`,
+            totalAmount: `${order.totalAmount?.toFixed(2) || "0.00"}`,
             items: (order.orderItemModels || []).map((item) => ({
                 ...item,
-                UnitPrice: `$${item.unitPrice?.toFixed(2) || "0.00"}`,
-                TotalAmount: `$${(item.unitPrice * item.quantity)?.toFixed(2) || "0.00"}`,
+                UnitPrice: `${item.unitPrice?.toFixed(2) || "0.00"}`,
+                TotalAmount: `${(item.unitPrice * item.quantity)?.toFixed(2) || "0.00"}`,
             })),
         }));
     };
@@ -78,12 +79,14 @@ const SaleOrder = () => {
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
                 />
+
+                <Button>
+
                 <Link
-                    to={"/dashboard/createSalesOrder"}
-                    className="bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg"
-                >
-                    Add+
+                    to={"/dashboard/createSalesOrder"}                >
+                    Add new +
                 </Link>
+                </Button>
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -116,11 +119,11 @@ const SaleOrder = () => {
                                             <MdOutlineKeyboardArrowDown className="w-6 h-6 text-gray-500 inline-block" />
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 text-center">{so.c_F_Name} {so.c_L_Name}</td>
-                                    <td className="px-6 py-4 text-center">{so.e_F_Name} {so.e_L_Name}</td>
+                                    <td className="px-6 py-4 text-center">{so.cus_F_Name} {so.cus_L_Name}</td>
+                                    <td className="px-6 py-4 text-center">{so.em_F_Name} {so.em_L_Name}</td>
                                     <td className="px-6 py-4 text-center">{so.orderDate}</td>
                                     <td className="px-6 py-4 text-center">{so.orderStatus}</td>
-                                    <td className="px-6 py-4 text-center">{so.totalAmount}</td>
+                                    <td className="px-6 py-4 text-center">{so.totalAmount}$</td>
                                     <td className="px-6 py-4 text-center">{so.paymentStatus}</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex gap-4 justify-center">
@@ -145,14 +148,14 @@ const SaleOrder = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {so.items.map((item, index) => (
+                                                    {so.orderItems.map((item, index) => (
                                                         <tr key={item.id || index} className="bg-white hover:bg-gray-200">
                                                             <td className="py-2 px-4 text-center font-bold">{index + 1}</td>
                                                             <td className="py-2 px-4 text-center">{item.orderId}</td>
                                                             <td className="py-2 px-4 text-center">{item.productName}</td>
-                                                            <td className="py-2 px-4 text-center">{item.UnitPrice}</td>
+                                                            <td className="py-2 px-4 text-center">{item.unitPrice}$</td>
                                                             <td className="py-2 px-4 text-center">{item.quantity}</td>
-                                                            <td className="py-2 px-4 text-center">{item.TotalAmount}</td>
+                                                            <td className="py-2 px-4 text-center">{item.totalPrice}$</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>

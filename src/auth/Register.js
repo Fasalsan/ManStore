@@ -60,7 +60,7 @@ function Register() {
                 {loading && (<Loading />)}
                 <div
                     className="relative w-full min-h-screen flex items-center justify-center bg-cover bg-center"
-                    style={{ backgroundImage: 'url("https://png.pngtree.com/thumb_back/fh260/background/20210903/pngtree-clothing-store-casual-fashion-mens-photography-photos-with-pictures-image_796891.jpg")' }}
+                    style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1595665593673-bf1ad72905c0?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2xvdGhpbmclMjBzdG9yZXxlbnwwfHwwfHx8MA%3D%3D")' }}
                 >
                     <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm transition-all duration-500"></div>
 
@@ -103,8 +103,8 @@ function Register() {
                         </form>
 
                         <p className="text-sm text-white text-center mt-4">
-                            Don't have an account?{' '}
-                            <a href="/register" className="text-white underline hover:text-blue-200">
+                            Have an account?{' '}
+                            <a href="/" className="text-white underline hover:text-blue-200">
                                 login here
                             </a>
                         </p>

@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Propconfirm from "../components/Propconfirm";
 import ModalEmployee from '../components/modal/ModalEmployee';
+import Button from '../components/Button';
 
 export default function Employee() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -81,7 +82,7 @@ export default function Employee() {
         }
     };
 
-    const RemoveCategory = async () => {
+    const RemoveEmployee = async () => {
         setPropconfirm(false);
         await new Promise((resolve) => setTimeout(resolve, 2000));
         await DeleteEmployee();
@@ -110,6 +111,12 @@ export default function Employee() {
         item.firstName?.toLowerCase().includes(search.toLowerCase())
     );
 
+    const handleAddItem = () => {
+        setIsEditMode(false);
+        setSelectedData(null);
+        setIsModalOpen(true);
+    }
+
     return (
         <div>
             <ToastContainer position="top-right" autoClose={3000} />
@@ -121,10 +128,8 @@ export default function Employee() {
                     onChange={(e) => setSearch(e.target.value)}
                     className='w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg'
                 />
-                <button
-                    onClick={handleCreate}
-                    className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
-                >Add+</button>
+                <Button onClick={() => handleAddItem()}>Add new +</Button>
+
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -210,12 +215,8 @@ export default function Employee() {
                 <div className="flex flex-col gap-7">
                     <p>Are you sure you want to delete this employee?</p>
                     <div className="flex justify-end gap-2">
-                        <button
-                            onClick={RemoveCategory}
-                            className="bg-blue-600 px-9 py-2 text-white rounded-lg">Yes</button>
-                        <button
-                            onClick={() => setPropconfirm(false)}
-                            className="bg-red-600 px-9 py-2 text-white rounded-lg">No</button>
+                        <Button className="px-6 py-2" variant="danger" onClick={() => setPropconfirm(false)}>No</Button>
+                        <Button className="px-6 py-2" onClick={() => RemoveEmployee()}>Yes</Button>
                     </div>
                 </div>
             </Propconfirm>

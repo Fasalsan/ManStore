@@ -3,8 +3,11 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { RiEditFill } from "react-icons/ri";
 import request from '../util/helper';
 import Loading from "../components/shared/Loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Propconfirm from "../components/Propconfirm";
 import ModalProduct from '../components/modal/ModalProduct';
+import Button from '../components/Button';
 
 export default function Product() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +52,7 @@ export default function Product() {
     const CreateProduct = async (data) => {
         try {
             await request(`Product/Post`, "post", data)
-
+            toast.success("Product created successfully!");
             await getProduct();
 
         } catch (error) {
@@ -61,6 +64,7 @@ export default function Product() {
         const id = isId
         try {
             await request(`Product/Update?id=${id}`, "Put", data)
+            toast.success("Product updated successfully!");
             await getProduct();
 
         } catch (error) {
@@ -73,6 +77,7 @@ export default function Product() {
         const id = isId
         try {
             await request(`Product/Delete?id=${id}`, "delete",)
+            toast.error("Product delete successfully!");
             await getProduct();
 
             setLoading(false);
@@ -108,7 +113,6 @@ export default function Product() {
         }
     }
 
-
     // Calculate total pages
     const totalPages = Math.ceil(product.length / itemsPerPage);
 
@@ -127,23 +131,27 @@ export default function Product() {
     const filteredData = currentData.filter(item =>
         item.name?.toLowerCase().includes(search.toLowerCase()) // Use optional chaining (?.) to check if 'name' exists
     );
+
+    const handleAddItem = () => {
+        setIsEditMode(false);
+        setSelectedData(null);
+        setIsModalOpen(true);
+    }
+
     return (
         <div>
-
+            <ToastContainer position="top-right" autoClose={3000} />
             <div className='flex justify-between items-center bg-white px-4 py-4 mb-4 shadow-md'>
 
-                {loading && (<Loading />)}
+
                 <input type="text"
                     placeholder='Search'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className='w-[25%] px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg'
                 />
+                <Button onClick={() => handleAddItem()}>Add new +</Button>
 
-                <button
-                    onClick={handleCreate}
-                    className='bg-[#163c82] px-12 py-2 rounded-lg text-white shadow-lg'
-                >Add+</button>
             </div>
 
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -152,7 +160,7 @@ export default function Product() {
                         <tr>
                             <th class="px-6 py-4 text-center">ID</th>
                             <th class="px-6 py-4 text-center">Name</th>
-                           
+
                             <th class="px-6 py-4 text-center">Brand</th>
                             <th class="px-6 py-4 text-center">Color</th>
                             <th class="px-6 py-4 text-center">Size</th>
@@ -170,7 +178,7 @@ export default function Product() {
                                 >
                                     <td className="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold">{i + 1}</td>
                                     <td className='text-center'>{item.name}</td>
-                                  
+
                                     <td className='text-center'>{item.brandModel.name}</td>
                                     <td className='text-center'>{item.colorModel.name}</td>
                                     <td className='text-center'>{item.sizeModel.name}</td>
@@ -249,13 +257,8 @@ export default function Product() {
                     <p>Are you Sure to delete this task!</p>
 
                     <div className="flex justify-end gap-2">
-                        <button
-                            onClick={RemoveProduct}
-                            className="bg-blue-600 px-9 py-2
-                            text-white rounded-lg">Yes</button>
-                        <button
-                            onClick={() => setPropconfirm(false)}
-                            className="bg-red-600 px-9 py-2 text-white rounded-lg">No</button>
+                        <Button className="px-6 py-2" variant="danger" onClick={() => setPropconfirm(false)}>No</Button>
+                        <Button className="px-6 py-2" onClick={() => RemoveProduct()}>Yes</Button>
                     </div>
                 </div>
             </Propconfirm>

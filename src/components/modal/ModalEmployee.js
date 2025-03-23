@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FormInputStyle from '../styel/formInputStyel';
+import Button from '../Button';
 
 const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' }) => {
     const [formData, setFormData] = useState({
@@ -108,19 +109,8 @@ const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                     </div>
 
                     <div className="flex justify-end gap-2">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-4 py-2 text-sm text-gray-600 bg-gray-100 rounded hover:bg-gray-200"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
-                        >
-                            {mode === 'create' ? 'Create' : 'Update'}
-                        </button>
+                        <Button className="px-4 py-2" variant="danger" onClick={onClose}>Cancel</Button>
+                        <Button type="submit" className="px-4 py-2">{mode === 'create' ? 'Create' : 'Update'}</Button>
                     </div>
                 </form>
             </div>
