@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
+import Propconfirm from "../components/Propconfirm";
+import { IoEyeOutline } from "react-icons/io5";
 
 const SaleOrder = () => {
     const [openRow, setOpenRow] = useState(null);
@@ -68,6 +70,26 @@ const SaleOrder = () => {
         }
     };
 
+
+
+        const [propconfirm, setPropconfirm] = useState(false);
+        const [isId, setIsId] = useState();
+        const DeleteSalesOrder = async () => {
+            const id = isId;
+            try {
+                await request(`SalesOrder/Delete?orderId=${id}`, "delete");
+                toast.error("Size deleted successfully!");
+                await getSaleOrder();
+            } catch (err) {
+                console.error(err);
+            }
+        };
+    
+        const RemoveSalesOrder = async () => {
+            setPropconfirm(false);
+            await DeleteSalesOrder();
+        };
+
     return (
         <div className="container mx-auto p-5">
             <ToastContainer />
@@ -127,8 +149,13 @@ const SaleOrder = () => {
                                     <td className="px-6 py-4 text-center">{so.paymentStatus}</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className="flex gap-4 justify-center">
-                                            <RiDeleteBin5Fill className="text-red-600 text-[20px] cursor-pointer" />
-                                            <RiEditFill className="text-green-600 text-[20px] cursor-pointer" />
+                                            <RiDeleteBin5Fill
+                                                onClick={() => {
+                                                    setIsId(so.id);
+                                                    setPropconfirm(true);
+                                                }}
+                                            className="text-red-600 text-[20px] cursor-pointer" />
+                                            <IoEyeOutline  className="text-green-600 text-[20px] cursor-pointer" />
                                         </div>
                                     </td>
                                 </tr>
@@ -194,6 +221,17 @@ const SaleOrder = () => {
                     Next
                 </button>
             </div>
+
+
+            <Propconfirm isOpenProp={propconfirm}>
+                <div className="flex flex-col gap-7">
+                    <p>Are you sure you want to delete this size?</p>
+                    <div className="flex justify-end gap-2">
+                        <Button className="px-6 py-2" variant="danger" onClick={() => setPropconfirm(false)}>No</Button>
+                        <Button className="px-6 py-2" onClick={() => RemoveSalesOrder()}>Yes</Button>
+                    </div>
+                </div>
+            </Propconfirm>
         </div>
     );
 };

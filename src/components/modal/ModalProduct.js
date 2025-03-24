@@ -10,22 +10,32 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
     const [formData, setFormData] = useState({
         name: '',
         price: '',
+        quantity: '',
+        cost: '',
+        brandId: '',
+        colorId: '',
+        sizeId: ''
     });
 
     useEffect(() => {
         fetchDropdownData();
         if (mode === 'update' && initialData) {
+            console.log('Initial Data for Update:', initialData);  // Log initialData
+
             setFormData({
                 name: initialData.name || '',
                 price: initialData.price || '',
-                brand_Id: initialData.brandModel ? String(initialData.brandModel.id) : '',
-                color_Id: initialData.colorModel ? String(initialData.colorModel.id) : '',
-                size_Id: initialData.sizeModel ? String(initialData.sizeModel.id) : ''
+                quantity: initialData.quantity || '',
+                cost: initialData.cost || '',
+                brandId: initialData.brandModel ? String(initialData.brandModel.id) : '',
+                colorId: initialData.colorModel ? String(initialData.colorModel.id) : '',
+                sizeId: initialData.sizeModel ? String(initialData.sizeModel.id) : ''
             });
         } else {
             resetForm();
         }
     }, [initialData, mode]);
+
     const fetchDropdownData = async () => {
         try {
             const [brandData, colorData, sizeData] = await Promise.all([
@@ -33,6 +43,11 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                 request("Color/GetAll", "get"),
                 request("Size/GetAll", "get")
             ]);
+
+            console.log('Brand Data:', brandData);  // Log brand data
+            console.log('Color Data:', colorData);  // Log color data
+            console.log('Size Data:', sizeData);    // Log size data
+
             setBrand(brandData);
             setColor(colorData);
             setSize(sizeData);
@@ -40,6 +55,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
             console.error("Error fetching dropdown data:", error);
         }
     };
+
     const resetForm = () => {
         setFormData({
             name: '',
@@ -61,7 +77,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
         e.preventDefault();
         onSubmit(formData);
         console.log(formData);
-        // onClose();
+        // onClose(); // Optionally close the modal after submit
     };
 
     if (!isOpen) return null;
@@ -72,9 +88,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                 <h2 className="text-xl font-bold mb-4">
                     {mode === 'create' ? 'Create Product' : 'Update Product'}
                 </h2>
-                <form onSubmit={handleSubmit}
-                    className="flex flex-col gap-2"
-                >
+                <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                     <div className='flex gap-4'>
                         <input
                             type="text"
@@ -86,7 +100,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                         />
                         <input
                             type="number"
-                            placeholder='price'
+                            placeholder='Price'
                             name="price"
                             value={formData.price}
                             onChange={handleChange}
@@ -96,7 +110,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                     <div className='flex gap-4'>
                         <input
                             type="number"
-                            placeholder='quantity'
+                            placeholder='Quantity'
                             name="quantity"
                             value={formData.quantity}
                             onChange={handleChange}
@@ -104,7 +118,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                         />
                         <input
                             type="number"
-                            placeholder='cost'
+                            placeholder='Cost'
                             name="cost"
                             value={formData.cost}
                             onChange={handleChange}
@@ -113,12 +127,11 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                     </div>
                     {/* Category Select Box */}
                     <div className='flex gap-4'>
-
                         <select
                             name="brandId"
                             value={formData.brandId}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300 "
+                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300"
                         >
                             <option value="">Select Brand</option>
                             {brand?.map((item) => (
@@ -141,6 +154,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                                 </option>
                             ))}
                         </select>
+
                         <select
                             name="sizeId"
                             value={formData.sizeId}
@@ -154,11 +168,12 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                                 </option>
                             ))}
                         </select>
-
                     </div>
                     <div className="flex justify-end gap-2">
                         <Button className="px-4 py-2" variant="danger" onClick={onClose}>Cancel</Button>
-                        <Button type="submit" className="px-4 py-2">{mode === 'create' ? 'Create' : 'Update'}</Button>
+                        <Button type="submit" className="px-4 py-2">
+                            {mode === 'create' ? 'Create' : 'Update'}
+                        </Button>
                     </div>
                 </form>
             </div>
