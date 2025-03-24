@@ -1,5 +1,5 @@
 // Login.js
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/shared/Loading';
 import { Config } from '../util/config';
@@ -18,41 +18,38 @@ function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-  
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     try {
       const response = await axios.post(`${Config.base_url}UserLogin`, {
         email,
         password,
       });
-  
+
+      // Extract token and user data from response
       const { token, user } = response.data;
-  
-      // Save the token
+
+      // Save the token (e.g., in localStorage for persistence)
       localStorage.setItem("authToken", token);
-  
+
       console.log("Logged in user:", user);
-  
+
       setLoading(false);
-  
-      // Redirect to dashboard on success
-      navigate("/dashboard");
+      // Redirect to dashboard or any protected route
+      await navigate("/dashboard");
     } catch (error) {
-      setLoading(false);
-  
-      // Show error message
+
+      // Handle errors, e.g., invalid credentials
       if (error.response) {
+        setLoading(false);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
         setError(error.response.data.message || "Login failed");
+
       } else {
         setError("Network error. Please try again.");
       }
-  
-      // Explicitly redirect back to login (optional, you're already there)
-      navigate("/");  // <- this line ensures you stay on login page
     }
   };
-  
-
-  
 
   const style = {
     backgroundImage: `url(${mybg})`,
