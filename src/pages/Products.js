@@ -152,13 +152,10 @@ export default function Product() {
                         <tr>
                             <th class="px-6 py-4 text-center">ID</th>
                             <th class="px-6 py-4 text-center">Name</th>
-                           
+                            <th class="px-6 py-4 text-center">Price</th>
                             <th class="px-6 py-4 text-center">Brand</th>
                             <th class="px-6 py-4 text-center">Color</th>
                             <th class="px-6 py-4 text-center">Size</th>
-                            <th class="px-6 py-4 text-center">Quantity</th>
-                            <th class="px-6 py-4 text-center">Cost</th>
-                            <th class="px-6 py-4 text-center">Price</th>
                             <th class="px-6 py-4 text-center">Action</th>
                         </tr>
                     </thead>
@@ -168,15 +165,12 @@ export default function Product() {
                                 <tr key={item.id}
                                     className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-100 text-center"
                                 >
-                                    <td className="px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold">{i + 1}</td>
+                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{i + 1}</td>
                                     <td className='text-center'>{item.name}</td>
-                                  
+                                    <td className='text-center'>{item.price}$</td>
                                     <td className='text-center'>{item.brandModel.name}</td>
                                     <td className='text-center'>{item.colorModel.name}</td>
                                     <td className='text-center'>{item.sizeModel.name}</td>
-                                    <td className='text-center'>{item.quantity}</td>
-                                    <td className='text-center'>{item.cost}$</td>
-                                    <td className='text-center'>{item.price}$</td>
                                     <td className="px-6 py-4 text-center">
                                         <div className='flex gap-4 justify-center'>
                                             <RiDeleteBin5Fill

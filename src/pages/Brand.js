@@ -16,7 +16,7 @@ export default function Brand() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [brand, setBrand] = useState([]);
-    const itemsPerPage = 3;
+    const itemsPerPage = 5;
 
     useEffect(() => {
         getBrand();
@@ -89,7 +89,7 @@ export default function Brand() {
 
     return (
         <div>
-            <ToastContainer position="top-right" autoClose={3000} />
+            <ToastContainer position="top-right" autoClose={2000} />
             <div className="flex justify-between items-center bg-white px-4 py-4 mb-4 shadow-md">
                 <input
                     type="text"
@@ -154,47 +154,6 @@ export default function Brand() {
                         )}
                     </tbody>
                 </table>
-            </div>
-
-                        {/* Pagination Controls */}
-                        <div className="mt-4 flex justify-center">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className={`px-4 py-2 mx-1 border border-gray-300 rounded-lg ${currentPage === 1
-                        ? "bg-gray-300 cursor-not-allowed"
-                        : "bg-white hover:bg-gray-200"
-                        }`}
-                >
-                    Previous
-                </button>
-
-                {/* Generate page numbers dynamically */}
-                {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                    (page) => (
-                        <button
-                            key={page}
-                            onClick={() => handlePageChange(page)}
-                            className={`px-4 py-2 mx-1 border border-gray-300 rounded-lg ${currentPage === page
-                                ? "bg-blue-500 text-white"
-                                : "bg-white hover:bg-gray-200"
-                                }`}
-                        >
-                            {page}
-                        </button>
-                    )
-                )}
-
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className={`px-4 py-2 mx-1 border border-gray-300 rounded-lg ${currentPage === totalPages
-                        ? "bg-gray-300 cursor-not-allowed"
-                        : "bg-white hover:bg-gray-200"
-                        }`}
-                >
-                    Next
-                </button>
             </div>
 
             <Propconfirm isOpenProp={propconfirm}>
