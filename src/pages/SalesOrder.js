@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { RiDeleteBin5Fill, RiEditFill } from "react-icons/ri";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 import { MdKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import request from "../util/helper";
 import { ToastContainer, toast } from "react-toastify";
@@ -78,7 +78,7 @@ const SaleOrder = () => {
             const id = isId;
             try {
                 await request(`SalesOrder/Delete?orderId=${id}`, "delete");
-                toast.error("Size deleted successfully!");
+                toast.error("SalesOrder deleted successfully!");
                 await getSaleOrder();
             } catch (err) {
                 console.error(err);
@@ -105,7 +105,7 @@ const SaleOrder = () => {
                 <Button>
 
                 <Link
-                    to={"/dashboard/createSalesOrder"}                >
+                    to={"/createSalesOrder"}                >
                     Add new +
                 </Link>
                 </Button>

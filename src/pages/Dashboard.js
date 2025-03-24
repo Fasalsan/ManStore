@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaBox, FaUserTie, FaUsers, FaFileInvoice } from 'react-icons/fa';
 import Loading from '../components/shared/Loading';
-import Button from '../components/Button';
-
 const localhost = 'https://localhost:7017/api/'
 
 export default function Dashboard() {
@@ -32,7 +30,6 @@ export default function Dashboard() {
 
         const mappedStats = [
 
-
           {
             label: 'SalesOrder',
             value: salesOrderData.totalCount,
@@ -40,7 +37,7 @@ export default function Dashboard() {
           },
           {
             label: 'Products',
-            value: productsData.totalCount, // Adjust this based on your API response structure
+            value: productsData.totalCount,
             icon: <FaBox className="text-blue-600 text-3xl" />,
           },
           {

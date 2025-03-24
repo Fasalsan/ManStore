@@ -16,7 +16,7 @@ import CreateSalesOrder from './pages/CreateSalesOrder';
 import Size from './pages/Size';
 import Brand from './pages/Brand'
 import Dashboard from './pages/Dashboard';
-import Button from './components/Button';
+import TestingCate from './pages/TestingCate';
 
 function App() {
   return (
@@ -24,12 +24,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
           {/* Protected Routes */}
           <Route
-            path="/dashboard"
+            path="/"
             element={
               <ProtectedRoute>
                 <Layout />
@@ -46,9 +46,10 @@ function App() {
             <Route path="order" element={<Order />} />
             <Route path="salesorder" element={<SalesOrder />} />
             <Route path="createSalesOrder" element={<CreateSalesOrder />} />
-            <Route path="testing" element={<Button />} />
+            <Route path="testing" element={<TestingCate />} />
           </Route>
-          {/* Catch-All Route */}
+         
+          {/* 404 */}
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

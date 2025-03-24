@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom'
 
 export default function Breadcrumbs() {
     const location = useLocation()
-    let currentLink = 'Category'
+    let currentLink = 'Dashboard'
 
-    const crumbs = location.pathname.split('/dashboard/')
+    const crumbs = location.pathname.split('/')
         // .filter(crumbs => crumbs === '')
         .filter(crumb => crumb !== '' )
         .map(crumb => {
@@ -19,6 +19,6 @@ export default function Breadcrumbs() {
         });
         console.log("--",crumbs);
     return (
-        <div>{crumbs.length > 0 ? crumbs: "Category"}</div>
+        <div>{crumbs.length > 0 ? crumbs: "Dashboard'"}</div>
     )
 }

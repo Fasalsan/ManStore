@@ -6,7 +6,7 @@ export default function SideBar() {
     return (
         <div className='bg-[#163c82] w-[15%] h-screen text-white'>
             <div className='pb-7 text-2xl font-bold p-5 '>
-                <Link to={"/dashboard"}>Man Store</Link>
+                <Link to={"/"}>Man Store</Link>
             </div>
             <nav>
                 <ul className="flex flex-col text-[16px]">

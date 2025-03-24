@@ -51,7 +51,7 @@ function Register() {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         CreateUser();
         await setLoading(false)
-        navigate("/")
+        navigate("/login");
     };
 
     return (
@@ -104,7 +104,7 @@ function Register() {
 
                         <p className="text-sm text-white text-center mt-4">
                             Have an account?{' '}
-                            <a href="/" className="text-white underline hover:text-blue-200">
+                            <a href="/login" className="text-white underline hover:text-blue-200">
                                 login here
                             </a>
                         </p>

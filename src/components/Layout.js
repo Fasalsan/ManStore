@@ -29,7 +29,7 @@ export default function Layout() {
 
         setTimeout(() => {
             localStorage.removeItem("authToken");
-            navigate("/"); 
+            navigate("/login"); 
             setLoading(false);
         }, 2000);
     };

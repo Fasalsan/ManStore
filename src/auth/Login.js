@@ -18,24 +18,29 @@ function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-  
+
     try {
       const response = await axios.post(
         `${Config.base_url}UserLogin`,
         { email, password },
-        { timeout: 20000 } // <-- Timeout added here
+        { timeout: 20000 }
       );
-  
+
       const { token, user } = response.data;
-  
+
       localStorage.setItem("authToken", token);
       console.log("Logged in user:", user);
-  
+
       setLoading(false);
-      navigate("/dashboard");
+      if (token) {
+        navigate("/");
+      }
+      else {
+        navigate("/login");
+      }
     } catch (error) {
       setLoading(false);
-  
+
       if (error.code === 'ECONNABORTED') {
         setError("Request timed out. Please try again.");
       } else if (error.response) {
@@ -43,11 +48,11 @@ function Login() {
       } else {
         setError("Network error. Please try again.");
       }
-  
-      navigate("/");
+
+
     }
   };
-  
+
 
 
   return (
@@ -62,7 +67,7 @@ function Login() {
           >
             <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm transition-all duration-500"></div>
 
-            <div className="relative z-10 w-full max-w-md bg-white/20 backdrop-blur-xl shadow-xl rounded-2xl p-8 border border-white/30">
+            <div className="relative z-10 w-full max-w-md backdrop-blur-xl shadow-xl rounded-2xl p-8 border ">
               <h2 className="text-3xl font-bold text-white text-center mb-6">Login</h2>
 
               <form className="space-y-4" onSubmit={handleLogin}>
