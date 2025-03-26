@@ -16,7 +16,7 @@ export default function Color() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [color, setColor] = useState([]);
-    const itemsPerPage = 5;
+    const itemsPerPage = 7;
 
     useEffect(() => {
         getColor();

@@ -17,7 +17,7 @@ export default function Size() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [size, setSize] = useState([]);
-    const itemsPerPage = 3;
+    const itemsPerPage = 7;
 
     useEffect(() => {
         getSize();

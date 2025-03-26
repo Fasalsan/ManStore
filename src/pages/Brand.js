@@ -17,7 +17,7 @@ export default function Brand() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [brand, setBrand] = useState([]);
-    const itemsPerPage = 3;
+    const itemsPerPage = 7;
 
     useEffect(() => {
         getBrand();

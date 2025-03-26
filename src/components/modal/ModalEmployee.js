@@ -20,8 +20,7 @@ const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                 lastName: '',
                 phone: '',
                 address: '',
-                email: '',
-                password: ''
+                email: ''
             });
         }
     }, [initialData, mode]);
@@ -96,15 +95,6 @@ const ModalEmployee = ({ isOpen, onClose, onSubmit, initialData, mode = 'create'
                             onChange={handleChange}
                             className={FormInputStyle}
                         />
-                        <input
-                            type="text"
-                            placeholder='password'
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className={FormInputStyle}
-                        />
-
 
                     </div>
 
