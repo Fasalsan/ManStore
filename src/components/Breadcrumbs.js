@@ -19,6 +19,6 @@ export default function Breadcrumbs() {
         });
         console.log("--",crumbs);
     return (
-        <div>{crumbs.length > 0 ? crumbs: "Dashboard'"}</div>
+        <div>{crumbs.length > 0 ? crumbs: "Dashboard"}</div>
     )
 }

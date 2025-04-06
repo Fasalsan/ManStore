@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { RiEditFill } from "react-icons/ri";
 import request from '../util/helper';
-import Loading from "../components/shared/Loading";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Propconfirm from "../components/Propconfirm";
