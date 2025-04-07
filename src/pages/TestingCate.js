@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import request from "../util/helper";
 import { ToastContainer, toast } from "react-toastify";
-
+import axios from 'axios';
+import Button from "../components/Button";
 
 const TestingCate = () => {
   const [order, setOrder] = useState({
@@ -11,10 +12,9 @@ const TestingCate = () => {
     orderStatus: "Pending",
     totalAmount: 0,
     paymentStatus: "Unpaid",
-    orderItems: [{ productId: "", quantity: 1, unitPrice: 0, totalPrice: 0 }],
+    orderItems: [{ productId: 0, productName: "", quantity: '', unitPrice: 0, totalPrice: 0 }],
   });
 
-  const [message, setMessage] = useState("");
   const [customers, setCustomers] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [products, setProducts] = useState([]);
@@ -36,39 +36,43 @@ const TestingCate = () => {
   }, []);
 
   const handleChange = (e) => {
-    setOrder({ ...order, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setOrder((prev) => ({
+      ...prev,
+      [name]: name === "customerId" || name === "employeeId" ? Number(value) : value,
+    }));
   };
 
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
-    const updatedItems = [...order.orderItems];
-    updatedItems[index][name] = value;
+    const items = [...order.orderItems];
+    const parsedValue = ["productId", "quantity", "unitPrice"].includes(name)
+      ? Number(value)
+      : value;
 
-    // Recalculate totalPrice if either quantity or unitPrice changes
+    items[index][name] = parsedValue;
+
     if (name === "productId") {
-      // Update the unit price and total price if product changes
-      const selectedProduct = products.find((product) => product.id === value);
+      const selectedProduct = products.find((p) => p.id === parsedValue);
       if (selectedProduct) {
-        updatedItems[index].unitPrice = selectedProduct.price;
-        updatedItems[index].totalPrice = updatedItems[index].quantity * selectedProduct.price;
+        items[index].unitPrice = selectedProduct.price;
+        items[index].totalPrice = items[index].quantity * selectedProduct.price;
       }
-    } else if (name === "quantity" || name === "unitPrice") {
-      // Recalculate total price based on quantity and unitPrice changes
-      const quantity = updatedItems[index].quantity;
-      const unitPrice = updatedItems[index].unitPrice;
-      updatedItems[index].totalPrice = quantity * unitPrice;
     }
 
-    setOrder({ ...order, orderItems: updatedItems });
+    if (name === "quantity" || name === "unitPrice") {
+      const quantity = Number(items[index].quantity);
+      const unitPrice = Number(items[index].unitPrice);
+      items[index].totalPrice = quantity * unitPrice;
+    }
+
+    setOrder({ ...order, orderItems: items });
   };
 
   const addOrderItem = () => {
     setOrder({
       ...order,
-      orderItems: [
-        ...order.orderItems,
-        { productId: "", quantity: 1, unitPrice: 0, totalPrice: 0 },
-      ],
+      orderItems: [...order.orderItems, { productId: 0, productName: "", quantity: '', unitPrice: 0, totalPrice: 0 }],
     });
   };
 
@@ -77,51 +81,59 @@ const TestingCate = () => {
     setOrder({ ...order, orderItems: updatedItems });
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    // Validate that order items are added
+    if (order.orderItems.length === 0) {
+      toast.error("Please add at least one product.");
+      return;
+    }
+
     try {
-      // Check if orderItems are populated
-      if (order.orderItems.length === 0) {
-        toast.error("Please add at least one product to the order.");
-        return;
-      }
-  
-      // Send the order data to the backend (replace 'Order/Post' with your API endpoint)
-      const response = await request("Order/Post", "post", order);
-      
-      if (response.success) {
-        // Success message (you can use a toast or a similar feedback mechanism)
+      // Log the order payload for debugging
+      console.log("Submitting order:", order);
+
+      // Send the order to the API using Axios
+      const response = await axios.post("https://localhost:7017/api/SalesOrder/Post", order, {
+        headers: {
+          "Content-Type": "application/json",  // Ensure correct content type for JSON payload
+        },
+      });
+
+      // Check if the response contains success
+      if (response.data.success) {
         toast.success("Order created successfully!");
+        // Optionally reset the form or redirect after success
       } else {
         toast.error("Failed to create order.");
       }
-  
     } catch (error) {
-      console.error("Error submitting order:", error);
-      toast.error("Error: Unable to submit order. Please try again.");
+      console.error("Submit error:", error);
+      // Check for error response from Axios
+      toast.error(
+        error.response?.data?.message || "Error submitting order. Please try again."
+      );
     }
   };
-  
 
 
-  // Calculate the total order amount
-  const totalAmount = order.orderItems.reduce((total, item) => total + item.totalPrice, 0);
+  const totalAmount = order.orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
-  // Update the order state to reflect this
   useEffect(() => {
-    setOrder((prevOrder) => ({
-      ...prevOrder,
-      totalAmount: totalAmount,
+    setOrder((prev) => ({
+      ...prev,
+      totalAmount,
     }));
-  }, [order.orderItems]); // Only trigger when orderItems change
+  }, [order.orderItems]);
 
   return (
     <div className="w-full p-6 bg-white shadow-md rounded-lg">
       <ToastContainer position="top-right" autoClose={3000} />
 
       <h2 className="text-xl font-bold mb-4">Create Order</h2>
-      {message && <p className="text-green-600">{message}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex gap-4">
@@ -178,18 +190,11 @@ const TestingCate = () => {
 
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-bold mt-4">Order Items</h3>
-          <button
-            type="button"
-            onClick={addOrderItem}
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-          >
-            Add Item
-          </button>
+          <Button onClick={addOrderItem}>Add Item</Button>
         </div>
 
         {order.orderItems.map((item, index) => (
           <div key={index} className="flex space-x-2 items-center">
-            {/* Product Dropdown */}
             <select
               name="productId"
               value={item.productId}
@@ -205,20 +210,18 @@ const TestingCate = () => {
               ))}
             </select>
 
-            {/* Product Price (updated when product is selected) */}
             <input
               type="number"
               name="unitPrice"
-              placeholder="Unit Price"
               value={item.unitPrice}
               onChange={(e) => handleItemChange(index, e)}
               className="w-1/6 p-2 border border-gray-300 rounded bg-gray-100"
+              readOnly
             />
 
             <input
               type="number"
               name="quantity"
-              placeholder="Qty"
               value={item.quantity}
               onChange={(e) => handleItemChange(index, e)}
               className="w-1/6 p-2 border border-gray-300 rounded"
@@ -228,34 +231,31 @@ const TestingCate = () => {
             <input
               type="text"
               name="totalPrice"
-              placeholder="Total"
-              value={`$${new Intl.NumberFormat().format(item.totalPrice)}`}
+              value={`$${item.totalPrice.toFixed(2)}`}
               className="w-1/6 p-2 border border-gray-300 rounded bg-gray-100"
+              readOnly
             />
 
             <button
               type="button"
               onClick={() => removeOrderItem(index)}
-              className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600"
+              className="text-red-600 p-3 rounded-full border-2 w-[4%] h-[4%] border-red-600 hover:bg-red-100 hover:border-red-700 transition duration-200"
             >
               X
             </button>
+
           </div>
         ))}
 
-        <div className="flex justify-end items-end pt-5 gap-4">
+        <div className="text-right font-bold pt-4">
+          Total: ${order.totalAmount.toFixed(2)}
+        </div>
+
+        <div className="flex justify-end gap-4">
           <Link to="/salesorder">
-            <button
-              type="button"
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
-              Back
-            </button>
+            <Button variant="danger"> Back </Button>
           </Link>
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
+          <button type="submit" className="bg-[#163c82] text-white px-4 py-2 rounded hover:bg-blue-700">
             Submit Order
           </button>
         </div>
