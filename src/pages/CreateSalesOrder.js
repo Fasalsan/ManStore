@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import request from "../util/helper";
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
@@ -18,6 +18,7 @@ const CreateSalesOrder = () => {
     const [customers, setCustomers] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,37 +83,27 @@ const CreateSalesOrder = () => {
     };
 
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validate that order items are added
         if (order.orderItems.length === 0) {
             toast.error("Please add at least one product.");
             return;
         }
 
         try {
-            // Log the order payload for debugging
             console.log("Submitting order:", order);
 
-            // Send the order to the API using Axios
-            const response = await axios.post("https://localhost:7017/api/SalesOrder/Post", order, {
-                headers: {
-                    "Content-Type": "application/json",  // Ensure correct content type for JSON payload
-                },
-            });
+            const response = await axios.post("https://localhost:7017/api/SalesOrder/Post", order);
 
-            // Check if the response contains success
-            if (response.data.success) {
+            if (response && response.data) {
                 toast.success("Order created successfully!");
-                // Optionally reset the form or redirect after success
+                setTimeout(() => navigate("/salesorder"), 1500);
             } else {
                 toast.error("Failed to create order.");
             }
         } catch (error) {
             console.error("Submit error:", error);
-            // Check for error response from Axios
             toast.error(
                 error.response?.data?.message || "Error submitting order. Please try again."
             );

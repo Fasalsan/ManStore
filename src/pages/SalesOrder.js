@@ -116,7 +116,7 @@ const SaleOrder = () => {
                     <thead className="bg-gray-700 text-white">
                         <tr>
                             <th className="px-6 py-4 text-center">#</th>
-                            <th className="px-6 py-4 text-center">View</th>
+                            {/* <th className="px-6 py-4 text-center">View</th> */}
                             <th className="px-6 py-4 text-center">Customer</th>
                             <th className="px-6 py-4 text-center">Employee</th>
                             <th className="px-6 py-4 text-center">Order Date</th>
@@ -134,13 +134,13 @@ const SaleOrder = () => {
                                     onClick={() => toggleRow(so.id)}
                                 >
                                     <td className="px-6 py-4 text-center font-bold">{(currentPage - 1) * itemsPerPage + i + 1}</td>
-                                    <td className="px-6 py-4 text-center">
+                                    {/* <td className="px-6 py-4 text-center">
                                         {openRow === so.id ? (
                                             <MdKeyboardArrowUp className="w-6 h-6 text-gray-700 inline-block" />
                                         ) : (
                                             <MdOutlineKeyboardArrowDown className="w-6 h-6 text-gray-500 inline-block" />
                                         )}
-                                    </td>
+                                    </td> */}
                                     <td className="px-6 py-4 text-center">{so.cus_F_Name} {so.cus_L_Name}</td>
                                     <td className="px-6 py-4 text-center">{so.em_F_Name} {so.em_L_Name}</td>
                                     <td className="px-6 py-4 text-center">{so.orderDate}</td>
