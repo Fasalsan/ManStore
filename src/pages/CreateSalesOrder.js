@@ -1,156 +1,267 @@
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import request from "../util/helper";
+import { ToastContainer, toast } from "react-toastify";
+import axios from 'axios';
+import Button from "../components/Button";
 
-const CreateSaleOrder = () => {
-    const [saleOrder, setSaleOrder] = useState({
+const CreateSalesOrder = () => {
+    const [order, setOrder] = useState({
         customerId: "",
         employeeId: "",
-        orderDate: "",
         orderStatus: "Pending",
+        totalAmount: 0,
         paymentStatus: "Unpaid",
-        items: []
+        orderItems: [{ productId: 0, productName: "", quantity: '', unitPrice: 0, totalPrice: 0 }],
     });
 
-    const [orderItem, setOrderItem] = useState({
-        productId: "",
-        unitPrice: "",
-        quantity: "",
-        totalPrice: ""
-    });
+    const [customers, setCustomers] = useState([]);
+    const [employees, setEmployees] = useState([]);
+    const [products, setProducts] = useState([]);
 
-    const [orderId, setOrderId] = useState(null); // Store orderId after submission
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const customersData = await request("Customer/GetAll", "get");
+                const employeesData = await request("Employee/GetAll", "get");
+                const productsData = await request("Product/GetAll", "get");
+                setCustomers(customersData);
+                setEmployees(employeesData);
+                setProducts(productsData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleChange = (e) => {
-        setSaleOrder({ ...saleOrder, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setOrder((prev) => ({
+            ...prev,
+            [name]: name === "customerId" || name === "employeeId" ? Number(value) : value,
+        }));
     };
 
-    const handleItemChange = (e) => {
-        setOrderItem({ ...orderItem, [e.target.name]: e.target.value });
-    };
+    const handleItemChange = (index, e) => {
+        const { name, value } = e.target;
+        const items = [...order.orderItems];
+        const parsedValue = ["productId", "quantity", "unitPrice"].includes(name)
+            ? Number(value)
+            : value;
 
-    const addItem = () => {
-        if (!orderItem.productId || !orderItem.unitPrice || !orderItem.quantity) {
-            toast.error("Please fill all item details");
-            return;
+        items[index][name] = parsedValue;
+
+        if (name === "productId") {
+            const selectedProduct = products.find((p) => p.id === parsedValue);
+            if (selectedProduct) {
+                items[index].unitPrice = selectedProduct.price;
+                items[index].totalPrice = items[index].quantity * selectedProduct.price;
+            }
         }
 
-        const unitPrice = parseFloat(orderItem.unitPrice);
-        const quantity = parseInt(orderItem.quantity);
-        const totalPrice = unitPrice * quantity;
+        if (name === "quantity" || name === "unitPrice") {
+            const quantity = Number(items[index].quantity);
+            const unitPrice = Number(items[index].unitPrice);
+            items[index].totalPrice = quantity * unitPrice;
+        }
 
-        setSaleOrder((prevState) => ({
-            ...prevState,
-            items: [
-                ...prevState.items,
-                { productId: orderItem.productId, unitPrice, quantity, totalPrice } // No orderId yet
-            ]
-        }));
-
-        setOrderItem({ productId: "", unitPrice: "", quantity: "", totalPrice: "" });
+        setOrder({ ...order, orderItems: items });
     };
 
-    const removeItem = (index) => {
-        setSaleOrder((prevState) => ({
-            ...prevState,
-            items: prevState.items.filter((_, i) => i !== index)
-        }));
+    const addOrderItem = () => {
+        setOrder({
+            ...order,
+            orderItems: [...order.orderItems, { productId: 0, productName: "", quantity: '', unitPrice: 0, totalPrice: 0 }],
+        });
     };
+
+    const removeOrderItem = (index) => {
+        const updatedItems = order.orderItems.filter((_, i) => i !== index);
+        setOrder({ ...order, orderItems: updatedItems });
+    };
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate that order items are added
+        if (order.orderItems.length === 0) {
+            toast.error("Please add at least one product.");
+            return;
+        }
+
         try {
-            const response = await request("SalesOrder/Post", "post", saleOrder);
+            // Log the order payload for debugging
+            console.log("Submitting order:", order);
 
-            if (response.orderId) {
-                setOrderId(response.orderId); // Store the generated orderId from backend
-
-                // Update orderId for each item in the items list
-                const updatedItems = saleOrder.items.map(item => ({
-                    ...item,
-                    orderId: response.orderId // Assign orderId to each item
-                }));
-
-                // Update the saleOrder with items including the orderId
-                setSaleOrder((prevState) => ({
-                    ...prevState,
-                    items: updatedItems
-                }));
-            }
-
-            toast.success("Sales Order Created Successfully!");
-
-            // Reset the form after submission
-            setSaleOrder({
-                customerId: "",
-                employeeId: "",
-                orderDate: "",
-                orderStatus: "Pending",
-                paymentStatus: "Unpaid",
-                items: []
+            // Send the order to the API using Axios
+            const response = await axios.post("https://localhost:7017/api/SalesOrder/Post", order, {
+                headers: {
+                    "Content-Type": "application/json",  // Ensure correct content type for JSON payload
+                },
             });
 
+            // Check if the response contains success
+            if (response.data.success) {
+                toast.success("Order created successfully!");
+                // Optionally reset the form or redirect after success
+            } else {
+                toast.error("Failed to create order.");
+            }
         } catch (error) {
-            toast.error("Failed to create Sales Order");
-            console.error("Error creating sales order:", error);
+            console.error("Submit error:", error);
+            // Check for error response from Axios
+            toast.error(
+                error.response?.data?.message || "Error submitting order. Please try again."
+            );
         }
     };
 
+
+    const totalAmount = order.orderItems.reduce((sum, item) => sum + item.totalPrice, 0);
+
+    useEffect(() => {
+        setOrder((prev) => ({
+            ...prev,
+            totalAmount,
+        }));
+    }, [order.orderItems]);
+
     return (
-        <div className="container mx-auto p-5">
-            <ToastContainer />
-            <h2 className="text-2xl font-bold mb-4">Create Sales Order</h2>
+        <div className="w-full p-6 bg-white shadow-md rounded-lg">
+            <ToastContainer position="top-right" autoClose={3000} />
 
-            {orderId && (
-                <div className="bg-green-100 text-green-700 p-3 mb-4 rounded">
-                    ✅ Order Created Successfully! Order ID: <strong>{orderId}</strong>
-                </div>
-            )}
+            <h2 className="text-xl font-bold mb-4">Create Order</h2>
 
-            <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6">
-                <div className="grid grid-cols-2 gap-4">
-                    <input type="text" name="customerId" placeholder="Customer ID" value={saleOrder.customerId} onChange={handleChange} className="border p-2 rounded" required />
-                    <input type="text" name="employeeId" placeholder="Employee ID" value={saleOrder.employeeId} onChange={handleChange} className="border p-2 rounded" required />
-                    <input type="date" name="orderDate" value={saleOrder.orderDate} onChange={handleChange} className="border p-2 rounded" required />
-                    <select name="orderStatus" value={saleOrder.orderStatus} onChange={handleChange} className="border p-2 rounded">
-                        <option value="Pending">Pending</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="flex gap-4">
+                    <select
+                        name="customerId"
+                        value={order.customerId}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    >
+                        <option value="">Select Customer</option>
+                        {customers.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.firstName} {c.lastName}
+                            </option>
+                        ))}
                     </select>
-                    <select name="paymentStatus" value={saleOrder.paymentStatus} onChange={handleChange} className="border p-2 rounded">
+
+                    <select
+                        name="employeeId"
+                        value={order.employeeId}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    >
+                        <option value="">Select Employee</option>
+                        {employees.map((e) => (
+                            <option key={e.id} value={e.id}>
+                                {e.firstName} {e.lastName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="flex gap-4">
+                    <input
+                        type="date"
+                        name="orderDate"
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    />
+                    <select
+                        name="paymentStatus"
+                        value={order.paymentStatus}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    >
                         <option value="Unpaid">Unpaid</option>
                         <option value="Paid">Paid</option>
                     </select>
                 </div>
 
-                <h3 className="mt-4 text-lg font-bold">Order Items</h3>
-                <div className="grid grid-cols-4 gap-4 mt-2 items-center">
-                    <input type="text" name="productId" placeholder="Product Name" value={orderItem.productId} onChange={handleItemChange} className="border p-2 rounded" />
-                    <input type="number" name="unitPrice" placeholder="Unit Price" value={orderItem.unitPrice} onChange={handleItemChange} className="border p-2 rounded" />
-                    <input type="number" name="quantity" placeholder="Quantity" value={orderItem.quantity} onChange={handleItemChange} className="border p-2 rounded" />
-                    <button type="button" onClick={addItem} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all">➕ Add Item</button>
+                <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-bold mt-4">Order Items</h3>
+                    <Button onClick={addOrderItem}>Add Item</Button>
                 </div>
 
-                {saleOrder.items.length > 0 && (
-                    <div className="mt-4">
-                        <h3 className="text-lg font-bold">Added Items</h3>
-                        {saleOrder.items.map((item, index) => (
-                            <div key={index} className="grid grid-cols-5 gap-4 mt-2 items-center">
-                                <input type="text" value={item.productId} className="border p-2 rounded" disabled />
-                                <input type="number" value={item.unitPrice} className="border p-2 rounded" disabled />
-                                <input type="number" value={item.quantity} className="border p-2 rounded" disabled />
-                                <input type="number" value={item.totalPrice} className="border p-2 rounded" disabled />
-                                <button type="button" onClick={() => removeItem(index)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-all">🗑 Remove</button>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                {order.orderItems.map((item, index) => (
+                    <div key={index} className="flex space-x-2 items-center">
+                        <select
+                            name="productId"
+                            value={item.productId}
+                            onChange={(e) => handleItemChange(index, e)}
+                            className="w-1/3 p-2 border border-gray-300 rounded"
+                            required
+                        >
+                            <option value="">Select Product</option>
+                            {products.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                    {p.name}
+                                </option>
+                            ))}
+                        </select>
 
-                <button type="submit" className="mt-4 bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 transition-all">✅ Submit Order</button>
+                        <input
+                            type="number"
+                            name="unitPrice"
+                            value={item.unitPrice}
+                            onChange={(e) => handleItemChange(index, e)}
+                            className="w-1/6 p-2 border border-gray-300 rounded bg-gray-100"
+                            readOnly
+                        />
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            value={item.quantity}
+                            onChange={(e) => handleItemChange(index, e)}
+                            className="w-1/6 p-2 border border-gray-300 rounded"
+                            required
+                        />
+
+                        <input
+                            type="text"
+                            name="totalPrice"
+                            value={`$${item.totalPrice.toFixed(2)}`}
+                            className="w-1/6 p-2 border border-gray-300 rounded bg-gray-100"
+                            readOnly
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() => removeOrderItem(index)}
+                            className="text-red-600 p-3 rounded-full border-2 w-[4%] h-[4%] border-red-600 hover:bg-red-100 hover:border-red-700 transition duration-200"
+                        >
+                            X
+                        </button>
+
+                    </div>
+                ))}
+
+                <div className="text-right font-bold pt-4">
+                    Total: ${order.totalAmount.toFixed(2)}
+                </div>
+
+                <div className="flex justify-end gap-4">
+                    <Link to="/salesorder">
+                        <Button variant="danger"> Back </Button>
+                    </Link>
+                    <button type="submit" className="bg-[#163c82] text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Submit Order
+                    </button>
+                </div>
             </form>
         </div>
     );
 };
 
-export default CreateSaleOrder;
+export default CreateSalesOrder;
