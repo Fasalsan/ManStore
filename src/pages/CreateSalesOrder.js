@@ -12,7 +12,7 @@ const CreateSalesOrder = () => {
         orderStatus: "Pending",
         totalAmount: 0,
         paymentStatus: "Unpaid",
-        orderItems: [{ productId: 0, productName: "", quantity: '', unitPrice: 0, totalPrice: 0 }],
+        orderItems: [{ productId: 0, productName: "", quantity: "", unitPrice: 0, totalPrice: 0 }],
     });
 
     const [customers, setCustomers] = useState([]);
@@ -81,7 +81,6 @@ const CreateSalesOrder = () => {
         const updatedItems = order.orderItems.filter((_, i) => i !== index);
         setOrder({ ...order, orderItems: updatedItems });
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
