@@ -46,9 +46,9 @@ function App() {
             <Route path="order" element={<Order />} />
             <Route path="salesorder" element={<SalesOrder />} />
             <Route path="createSalesOrder" element={<CreateSalesOrder />} />
-            <Route path="testing" element={<TestingCate />} />
+            {/* <Route path="testing" element={<TestingCate />} /> */}
           </Route>
-         
+
           {/* 404 */}
           <Route path="*" element={<NoPage />} />
         </Routes>
