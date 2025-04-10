@@ -131,7 +131,7 @@ const CreateSalesOrder = () => {
                         name="customerId"
                         value={order.customerId}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
                         required
                     >
                         <option value="">Select Customer</option>
@@ -146,7 +146,7 @@ const CreateSalesOrder = () => {
                         name="employeeId"
                         value={order.employeeId}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
                         required
                     >
                         <option value="">Select Employee</option>
@@ -163,14 +163,14 @@ const CreateSalesOrder = () => {
                         type="date"
                         name="orderDate"
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
                         required
                     />
                     <select
                         name="paymentStatus"
                         value={order.paymentStatus}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded"
+                        className="w-full p-2 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
                         required
                     >
                         <option value="Unpaid">Unpaid</option>
@@ -184,57 +184,77 @@ const CreateSalesOrder = () => {
                 </div>
 
                 {order.orderItems.map((item, index) => (
-                    <div key={index} className="flex space-x-2 items-center">
-                        <select
-                            name="productId"
-                            value={item.productId}
-                            onChange={(e) => handleItemChange(index, e)}
-                            className="w-1/3 p-2 border border-gray-300 rounded"
-                            required
-                        >
-                            <option value="">Select Product</option>
-                            {products.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                    {p.name}
-                                </option>
-                            ))}
-                        </select>
+                    <div key={index} className="flex space-x-2 items-start">
+                        {/* Product Select */}
+                        <div className="flex flex-col w-full justify-end items-end">
+                            <label className="mb-1 text-sm font-medium text-gray-700">Product</label>
+                            <select
+                                name="productId"
+                                value={item.productId}
+                                onChange={(e) => handleItemChange(index, e)}
+                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                required
+                            >
+                                <option value="">Select Product</option>
+                                {products.map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                        <input
-                            type="number"
-                            name="unitPrice"
-                            value={item.unitPrice}
-                            onChange={(e) => handleItemChange(index, e)}
-                            className="w-1/6 p-2 border border-gray-300 rounded bg-gray-100"
-                            readOnly
-                        />
+                        {/* Unit Price (read-only) */}
+                        <div className="flex flex-col w-full">
+                            <label className="mb-1 text-sm font-medium text-gray-700">Unit Price</label>
+                            <input
+                                type="number"
+                                name="unitPrice"
+                                value={item.unitPrice}
+                                onChange={(e) => handleItemChange(index, e)}
+                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                readOnly
+                            />
+                        </div>
 
-                        <input
-                            type="number"
-                            name="quantity"
-                            value={item.quantity}
-                            onChange={(e) => handleItemChange(index, e)}
-                            className="w-1/6 p-2 border border-gray-300 rounded"
-                            required
-                        />
+                        {/* Quantity */}
+                        <div className="flex flex-col w-full">
+                            <label className="mb-1 text-sm font-medium text-gray-700">Quantity</label>
+                            <input
+                                type="number"
+                                name="quantity"
+                                value={item.quantity}
+                                onChange={(e) => handleItemChange(index, e)}
+                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                required
+                            />
+                        </div>
 
-                        <input
-                            type="text"
-                            name="totalPrice"
-                            value={`$${item.totalPrice.toFixed(2)}`}
-                            className="w-1/6 p-2 border border-gray-300 rounded bg-gray-100"
-                            readOnly
-                        />
+                        {/* Total Price (read-only) */}
+                        <div className="flex flex-col w-full">
+                            <label className="mb-1 text-sm font-medium text-gray-700">Total Price</label>
+                            <input
+                                type="text"
+                                name="totalPrice"
+                                value={`$${item.totalPrice.toFixed(2)}`}
+                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                readOnly
+                            />
+                        </div>
 
-                        <button
-                            type="button"
-                            onClick={() => removeOrderItem(index)}
-                            className="text-red-600 p-3 rounded-full border-2 w-[4%] h-[4%] border-red-600 hover:bg-red-100 hover:border-red-700 transition duration-200"
-                        >
-                            X
-                        </button>
+
+                        <div className="w-[20%] flex justify-center items-center pt-6">
+                            <button
+                                type="button"
+                                onClick={() => removeOrderItem(index)}
+                                className="text-red-600 p-3 rounded-full border-2 w-[40px] h-[40px] border-red-600 hover:bg-red-100 hover:border-red-700 transition duration-200 flex justify-center items-center"
+                            >
+                                X
+                            </button>
+                        </div>
 
                     </div>
+
                 ))}
 
                 <div className="text-right font-bold pt-4">
