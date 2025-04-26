@@ -4,6 +4,7 @@ import request from "../util/helper";
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
 import Button from "../components/Button";
+import FormInputStyle from "../components/styel/formInputStyel";
 
 const CreateSalesOrder = () => {
     const [order, setOrder] = useState({
@@ -192,7 +193,7 @@ const CreateSalesOrder = () => {
                                 name="productId"
                                 value={item.productId}
                                 onChange={(e) => handleItemChange(index, e)}
-                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                className={FormInputStyle}
                                 required
                             >
                                 <option value="">Select Product</option>
@@ -212,7 +213,7 @@ const CreateSalesOrder = () => {
                                 name="unitPrice"
                                 value={item.unitPrice}
                                 onChange={(e) => handleItemChange(index, e)}
-                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                className={FormInputStyle}
                                 readOnly
                             />
                         </div>
@@ -225,7 +226,7 @@ const CreateSalesOrder = () => {
                                 name="quantity"
                                 value={item.quantity}
                                 onChange={(e) => handleItemChange(index, e)}
-                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                className={FormInputStyle}
                                 required
                             />
                         </div>
@@ -237,7 +238,7 @@ const CreateSalesOrder = () => {
                                 type="text"
                                 name="totalPrice"
                                 value={`$${item.totalPrice.toFixed(2)}`}
-                                className="w-full px-3 py-2.5 border border-gray-300 hover:border-[#163c82] focus:border-[#163c82] outline-none rounded-lg"
+                                className={FormInputStyle}
                                 readOnly
                             />
                         </div>

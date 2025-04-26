@@ -93,13 +93,10 @@ const TestingCate = () => {
     }
 
     try {
-      // Log the order payload for debugging
-      console.log("Submitting order:", order);
 
-      // Send the order to the API using Axios
       const response = await axios.post("https://localhost:7017/api/SalesOrder/Post", order, {
         headers: {
-          "Content-Type": "application/json",  // Ensure correct content type for JSON payload
+          "Content-Type": "application/json",
         },
       });
 

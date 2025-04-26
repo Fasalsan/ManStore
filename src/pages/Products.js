@@ -18,12 +18,7 @@ export default function Product() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [product, setProduct] = useState([]);
-    const itemsPerPage = 5
-    const handleCreate = () => {
-        setIsEditMode(false);
-        setSelectedData(null);
-        setIsModalOpen(true);
-    };
+    const itemsPerPage = 7
 
     const handleEdits = (item) => {
         setIsEditMode(true);

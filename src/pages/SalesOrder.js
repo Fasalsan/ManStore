@@ -14,7 +14,7 @@ const SaleOrder = () => {
     const [saleOrder, setSaleOrder] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
-    const itemsPerPage = 5;
+    const itemsPerPage = 6;
 
     useEffect(() => {
         getSaleOrder();
@@ -225,7 +225,7 @@ const SaleOrder = () => {
 
             <Propconfirm isOpenProp={propconfirm}>
                 <div className="flex flex-col gap-7">
-                    <p>Are you sure you want to delete this size?</p>
+                    <p>Are you sure you want to delete this item?</p>
                     <div className="flex justify-end gap-2">
                         <Button className="px-6 py-2" variant="danger" onClick={() => setPropconfirm(false)}>No</Button>
                         <Button className="px-6 py-2" onClick={() => RemoveSalesOrder()}>Yes</Button>

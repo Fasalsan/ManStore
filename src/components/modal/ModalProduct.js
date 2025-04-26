@@ -44,10 +44,6 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                 request("Size/GetAll", "get")
             ]);
 
-            console.log('Brand Data:', brandData);  // Log brand data
-            console.log('Color Data:', colorData);  // Log color data
-            console.log('Size Data:', sizeData);    // Log size data
-
             setBrand(brandData);
             setColor(colorData);
             setSize(sizeData);
@@ -76,8 +72,6 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(formData);
-        console.log(formData);
-        // onClose(); // Optionally close the modal after submit
     };
 
     if (!isOpen) return null;
@@ -131,7 +125,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                             name="brandId"
                             value={formData.brandId}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300"
+                            className={FormInputStyle}
                         >
                             <option value="">Select Brand</option>
                             {brand?.map((item) => (
@@ -145,7 +139,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                             name="colorId"
                             value={formData.colorId}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300"
+                            className={FormInputStyle}
                         >
                             <option value="">Select Color</option>
                             {color?.map((item) => (
@@ -159,7 +153,7 @@ const ModalProduct = ({ isOpen, onClose, onSubmit, initialData, mode = 'create' 
                             name="sizeId"
                             value={formData.sizeId}
                             onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-300"
+                            className={FormInputStyle}
                         >
                             <option value="">Select Size</option>
                             {size?.map((item) => (
