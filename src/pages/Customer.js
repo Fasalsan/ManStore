@@ -17,13 +17,7 @@ export default function Customer() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [customr, setCustomer] = useState([]);
-    const itemsPerPage = 5;
-
-    const handleCreate = () => {
-        setIsEditMode(false);
-        setSelectedData(null);
-        setIsModalOpen(true);
-    };
+    const itemsPerPage = 6;
 
     const handleEdits = (item) => {
         setIsEditMode(true);

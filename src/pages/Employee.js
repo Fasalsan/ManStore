@@ -17,7 +17,7 @@ export default function Employee() {
     const [isEditMode, setIsEditMode] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
     const [emp, setEmp] = useState([]);
-    const itemsPerPage = 5;
+    const itemsPerPage = 6;
 
     const handleCreate = () => {
         setIsEditMode(false);
