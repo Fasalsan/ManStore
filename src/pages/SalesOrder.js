@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { RiDeleteBin5Fill } from "react-icons/ri";
-import { MdKeyboardArrowUp, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import request from "../util/helper";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -72,23 +71,23 @@ const SaleOrder = () => {
 
 
 
-        const [propconfirm, setPropconfirm] = useState(false);
-        const [isId, setIsId] = useState();
-        const DeleteSalesOrder = async () => {
-            const id = isId;
-            try {
-                await request(`SalesOrder/Delete?orderId=${id}`, "delete");
-                toast.error("SalesOrder deleted successfully!");
-                await getSaleOrder();
-            } catch (err) {
-                console.error(err);
-            }
-        };
-    
-        const RemoveSalesOrder = async () => {
-            setPropconfirm(false);
-            await DeleteSalesOrder();
-        };
+    const [propconfirm, setPropconfirm] = useState(false);
+    const [isId, setIsId] = useState();
+    const DeleteSalesOrder = async () => {
+        const id = isId;
+        try {
+            await request(`SalesOrder/Delete?orderId=${id}`, "delete");
+            toast.error("SalesOrder deleted successfully!");
+            await getSaleOrder();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const RemoveSalesOrder = async () => {
+        setPropconfirm(false);
+        await DeleteSalesOrder();
+    };
 
     return (
         <div className="container mx-auto p-5">
@@ -104,10 +103,10 @@ const SaleOrder = () => {
 
                 <Button>
 
-                <Link
-                    to={"/createSalesOrder"}                >
-                    Add new +
-                </Link>
+                    <Link
+                        to={"/createSalesOrder"}                >
+                        Add new +
+                    </Link>
                 </Button>
             </div>
 
@@ -120,7 +119,6 @@ const SaleOrder = () => {
                             <th className="px-6 py-4 text-center">Customer</th>
                             <th className="px-6 py-4 text-center">Employee</th>
                             <th className="px-6 py-4 text-center">Order Date</th>
-                            <th className="px-6 py-4 text-center">Status</th>
                             <th className="px-6 py-4 text-center">Total Amount</th>
                             <th className="px-6 py-4 text-center">Payment Status</th>
                             <th className="px-6 py-4 text-center">Action</th>
@@ -134,17 +132,9 @@ const SaleOrder = () => {
                                     onClick={() => toggleRow(so.id)}
                                 >
                                     <td className="px-6 py-4 text-center font-bold">{(currentPage - 1) * itemsPerPage + i + 1}</td>
-                                    {/* <td className="px-6 py-4 text-center">
-                                        {openRow === so.id ? (
-                                            <MdKeyboardArrowUp className="w-6 h-6 text-gray-700 inline-block" />
-                                        ) : (
-                                            <MdOutlineKeyboardArrowDown className="w-6 h-6 text-gray-500 inline-block" />
-                                        )}
-                                    </td> */}
                                     <td className="px-6 py-4 text-center">{so.cus_F_Name} {so.cus_L_Name}</td>
                                     <td className="px-6 py-4 text-center">{so.em_F_Name} {so.em_L_Name}</td>
                                     <td className="px-6 py-4 text-center">{so.orderDate}</td>
-                                    <td className="px-6 py-4 text-center">{so.orderStatus}</td>
                                     <td className="px-6 py-4 text-center">{so.totalAmount}$</td>
                                     <td className="px-6 py-4 text-center">{so.paymentStatus}</td>
                                     <td className="px-6 py-4 text-center">
@@ -154,8 +144,8 @@ const SaleOrder = () => {
                                                     setIsId(so.id);
                                                     setPropconfirm(true);
                                                 }}
-                                            className="text-red-600 text-[20px] cursor-pointer" />
-                                            <IoEyeOutline  className="text-green-600 text-[20px] cursor-pointer" />
+                                                className="text-red-600 text-[20px] cursor-pointer" />
+                                            <IoEyeOutline className="text-green-600 text-[20px] cursor-pointer" />
                                         </div>
                                     </td>
                                 </tr>
@@ -225,7 +215,7 @@ const SaleOrder = () => {
 
             <Propconfirm isOpenProp={propconfirm}>
                 <div className="flex flex-col gap-7">
-                    <p>Are you sure you want to delete this item?</p>
+                    <p>Are you sure you want to delete this Order?</p>
                     <div className="flex justify-end gap-2">
                         <Button className="px-6 py-2" variant="danger" onClick={() => setPropconfirm(false)}>No</Button>
                         <Button className="px-6 py-2" onClick={() => RemoveSalesOrder()}>Yes</Button>
